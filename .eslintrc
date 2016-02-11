@@ -1,0 +1,34 @@
+env:
+
+  ###########################################################################
+  #                                                                         #
+  #   ENVIRONMENT: if you write code that will be executed in one of the    #
+  #   following environments, the value for that environment should be      #
+  #   set to true.                                                          #
+  #                                                                         #
+  ###########################################################################
+
+  browser: false
+  es6: true
+
+ecmaFeatures:
+  modules: true
+  destructuring: true
+  spread: true
+  arrowFunctions: true
+  blockBindings: true
+
+globals:
+
+  ###########################################################################
+  #                                                                         #
+  #   GLOBALS: ESLint will assume the following variables are declared      #
+  #   globally; other variables will require explicit declaration.          #
+  #                                                                         #
+  ###########################################################################
+
+  tabris: true
+  require: true
+
+
+

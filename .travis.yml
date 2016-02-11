@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+   - "4.*"
+
+branches:
+  only:
+    - master
+
+after_success:
+    - ./make saucelabs
+
+notifications:
+    email: false
+
+sudo: true
