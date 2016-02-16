@@ -1,7 +1,7 @@
 {
   "name": "es6-project-starter-kit",
   "version": "5.0.0",
-  "description": "Universal Starter Kit to build any javascript ES6 project/library runnable in nodejs and on any browser",
+  "description": "Experiments with tabris.js using hyperscript templates and ES6",
   "main": "index.js",
   "scripts": {
     "test": "node make test",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/GianlucaGuarini/es6-project-starter-kit.git"
+    "url": "https://github.com/eclipsesource/tabris-js-experiments.git"
   },
   "keywords": [
     "javascript",
@@ -53,12 +53,7 @@
     "mocha": "^2.3.3",
     "phantomjs": "^1.9.18"
   },
-  "author": "Gianluca Guarini (http://gianlucaguarini.com/)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/GianlucaGuarini/es6-project-starter-kit/issues"
-  },
-  "homepage": "https://github.com/GianlucaGuarini/es6-project-starter-kit",
   "dependencies": {
     "mkdir": "0.0.2",
     "tabris": "^1.5.0"
