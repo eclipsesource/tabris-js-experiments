@@ -6,15 +6,17 @@ lib-cov
 *.out
 *.pid
 *.gz
-.idea
 
 pids
 logs
 results
 
 npm-debug.log
-node_modules
+node_modules/
 coverage
 .DS_Store
-.idea
+.idea/
 
+# Eclipse IDE
+.project
+.settings/
