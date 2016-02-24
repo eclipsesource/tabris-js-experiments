@@ -1,9 +1,11 @@
+// Basic Element Renderer
 function RenderElement (elem = "Composite", params= {}) {
 	return tabris.create(elem, params);
 }
 
 function RenderTree (elemName = "Composite", params= {}, children = [], mixins = []) {
 	let elem = RenderElement(elemName,params);
+	// Append the children to the element.
 	children.forEach((child) => {
 		if(typeof child === 'function'){
 			child().appendTo(elem);
@@ -15,33 +17,19 @@ function RenderTree (elemName = "Composite", params= {}, children = [], mixins =
 			child.appendTo(elem);
 		}
 	});
-
-	mixins.forEach((mixin) => {
-		if(typeof mixin ===  'function'){
-			mixin(elem);
-		}
-	});
+	// Run the mixins on the root element (like animations).
+	mixins.forEach( mixin => typeof mixin ===  'function' ? mixin(elem) : null );
 	return elem;
 }
 
+// Generic helpers. Some borrowed from https://github.com/ohanhi/hyperscript-helpers/blob/master/src/index.js
+const inputType     = param => Array.isArray(param)? 'array' : typeof param;
+const isValidString = param => typeof param === 'string' && param.length > 0;
+const startsWith    = (string, start) => string[0] === start;
+const isSelector    = param => isValidString(param) && (startsWith(param, '.') || startsWith(param, '#'));
 
-const inputType =
-	param =>
-		Array.isArray(param)? 'array' : typeof param;
-
-const isValidString =
-	param =>
-	typeof param === 'string' && param.length > 0;
-
-const startsWith =
-	(string, start) =>
-	string[0] === start;
-
-const isSelector =
-	param =>
-	isValidString(param) && (startsWith(param, '.') || startsWith(param, '#'));
-
-
+// This function creates the renderer.
+// For production use the approach will be a bit different to allow better tooling with IDEs
 const createRender = function(tagName){
 	return (...rest) => {
 		let children = [], params= {}, mixins =[];
@@ -59,15 +47,8 @@ const createRender = function(tagName){
 			}
 		});
 		rest.forEach(element =>{
-			let elemType = inputType (element);
-			// TODO: clean up these functions
-			if(elemType === 'array'){
-				children = element;
-			}
-			else if(elemType === 'object'){
-				params = element;
-			}
-			else if(isSelector(element)){
+
+			if(isSelector(element)){
 				// TODO: support both id and class
 				if(startsWith(element, '#')){
 					params['id'] = element.slice(1);
