@@ -1,9 +1,9 @@
 // Basic Element Renderer
-function RenderElement (elem = "Composite", params= {}) {
+function RenderElement (elem, params= {}) {
 	return tabris.create(elem, params);
 }
 
-function RenderTree (elemName = "Composite", params= {}, children = [], mixins = []) {
+function RenderTree (elemName, params= {}, children = [], mixins = []) {
 	let elem = RenderElement(elemName,params);
 	// Append the children to the element.
 	children.forEach((child) => {

@@ -11,7 +11,7 @@ export function Spacer(config = {}) {
 
 export function Each(ArrayToIterate , ComponentForEachItem, FallbackComponent) {
 	return (
-		ArrayToIterate.length > 0 ? ArrayToIterate.map( ComponentForEachItem ) : (FallbackComponent ? [FallbackComponent] : [])
+		(ArrayToIterate && ArrayToIterate.length > 0) ? ArrayToIterate.map( ComponentForEachItem ) : (FallbackComponent ? [FallbackComponent] : [])
 	)
 }
 

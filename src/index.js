@@ -39,7 +39,7 @@ const styles = {
  *************************/
 
 function AppNavigationStart(){
-	// Drawer Init 
+	// Drawer Init
 	Drawer( {id:'appDrawer'} ,[
 		PageSelector,
 	])
@@ -211,6 +211,7 @@ function BookTabs(book) {
 function CommentsList(comments = []) {
 	return (
 		ScrollView(styles.full,
+			// An example of an Each (items, component, fallback_for_empty_arr)
 			Each (comments, CommentItem, NoComments)
 		)
 	)
