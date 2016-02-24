@@ -33,30 +33,25 @@ function BookDetails(book) {
 }
 ```
 
-# Usage
+# Setup
 
 Once you've downloaded the files in this repo please run the following command in your terminal from the project folder (it may require `sudo`):
 
 ```shell
+$ git clone https://github.com/eclipsesource/tabris-js-experiments.git
+$ cd tabris-js-experiments
 $ npm install
+$ npm run build
+$ npm run watch
 ```
 
-## Available tasks
-
-### Convert the ES6 code into valid ES5 combining all the modules into one single file
-```shell
-$ ./make build # or also `$ npm run build`
-```
-### Start a nodejs static server
+And in a new tab inside the tabris-js-experiments directory:
 ```shell
 $ npm install -g http-server
 $ http-server
 ```
+Connect to your code from the Tabris.js Developer App ([Play Store](https://play.google.com/store/apps/details?id=com.eclipsesource.tabris.js) / [App Store](https://itunes.apple.com/us/app/tabris.js/id939600018?ls=1&mt=8)).
 
-### To compile and/or test the project anytime a file gets changed
-```shell
-$ ./make watch # or also `$ npm run watch`
-```
 
 # Thanks
 
