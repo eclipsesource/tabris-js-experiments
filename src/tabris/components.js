@@ -3,6 +3,9 @@ function RenderElement (elem, params= {}) {
 	return tabris.create(elem, params);
 }
 
+/*
+ Renders and element with it's params, appends it's children, and then applys mixins.
+ */
 function RenderTree (elemName, params= {}, children = [], mixins = []) {
 	let elem = RenderElement(elemName,params);
 	// Append the children to the element.
@@ -24,8 +27,10 @@ function RenderTree (elemName, params= {}, children = [], mixins = []) {
 
 
 
-// This function creates the renderer.
-// For production the approach will be a bit different to allow better tooling with IDEs
+/*
+ This function creates the renderer.
+ For production the approach will be a bit different to allow better tooling with IDEs
+*/
 const createRender = function(tagName){
 	return (...rest) => {
 		let children = [], params= {}, mixins =[], strings= [];
