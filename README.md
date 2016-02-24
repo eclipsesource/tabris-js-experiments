@@ -10,7 +10,7 @@ This repo has all kinds of experiments regarding it's future apis.
 the magic happens at:
 https://github.com/eclipsesource/tabris-js-experiments/blob/master/src/index.js
 
-## javascript ES6
+## ES6 + Declarative UI
 
 ```javascript
 /*************************
@@ -35,7 +35,7 @@ function BookDetails(book) {
 
 # Setup
 
-Once you've downloaded the files in this repo please run the following command in your terminal from the project folder (it may require `sudo`):
+Seting up is really easy (you just node node installed):
 
 ```shell
 $ git clone https://github.com/eclipsesource/tabris-js-experiments.git
@@ -45,13 +45,18 @@ $ npm run build
 $ npm run watch
 ```
 
-And in a new tab inside the tabris-js-experiments directory:
+And in a new shell inside the tabris-js-experiments directory:
 ```shell
 $ npm install -g http-server
 $ http-server
 ```
 Connect to your code from the Tabris.js Developer App ([Play Store](https://play.google.com/store/apps/details?id=com.eclipsesource.tabris.js) / [App Store](https://itunes.apple.com/us/app/tabris.js/id939600018?ls=1&mt=8)).
 
+# Contribute
+
+Please read the related blog post on: [TODO INSERT]
+
+For any questions ping me: shai@eclipsesource.com
 
 # Thanks
 
