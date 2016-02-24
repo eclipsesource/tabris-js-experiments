@@ -221,44 +221,44 @@ function CommentsList(comments = []) {
 
 function CommentItem(comment) {
 	return (
-		Composite( '.commentContainer', [
-			Image( '.commenterAvatar', comment.user.avatar ),
-			Text ( '.commentAuthor',   comment.user.name   ),
-			Text ( '.commentText',     comment.text        )
+		Composite( commentStyling.commentContainer, [
+			Image( comment.user.avatar , commentStyling.commenterAvatar),
+			Text ( comment.user.name   , commentStyling.commentAuthor  ),
+			Text ( comment.text       , commentStyling.commentText     )
 		]).apply(commentStyling)
 	)
 }
 
 function NoComments() {
 	return (
-		Composite('.commentContainer', [
-			Text('.noComments','No comments yet for this item :('),
+		Composite(commentStyling.commentContainer, [
+			Text('No comments yet for this item :(', commentStyling.noComments),
 		])
 	)
 }
 
 const commentStyling = {
-	'.commentContainer': styles.stackMargin,
-	'.commenterAvatar': {
+	commentContainer: styles.stackMargin,
+	commenterAvatar: {
 		left: PAGE_MARGIN,
 		top: 10,
 		width: 32,
 		height: 48,
 		scaleMode: "fit",
 	},
-	'.commentText':{
+	commentText:{
 		left: 64,
 		right: PAGE_MARGIN,
 		top: "prev()",
 		textColor: "#7b7b7b",
 	},
-	'.commentAuthor': {
+	commentAuthor:{
 		left: 64,
 		right: PAGE_MARGIN,
 		top: 15,
 		textColor: "#000000",
 	},
-	'.noComments': {
+	noComments: {
 		left: 64,
 		right: PAGE_MARGIN,
 		top: 15,

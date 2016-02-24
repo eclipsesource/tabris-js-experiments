@@ -32,7 +32,7 @@ const isSelector    = param => isValidString(param) && (startsWith(param, '.') |
 // For production use the approach will be a bit different to allow better tooling with IDEs
 const createRender = function(tagName){
 	return (...rest) => {
-		let children = [], params= {}, mixins =[];
+		let children = [], params= {}, mixins =[], strings= [];
 		// TODO: clean up these functions
 		rest.forEach(element =>{
 			let elemType = inputType (element);
@@ -45,21 +45,23 @@ const createRender = function(tagName){
 			else if(elemType === 'function'){
 				mixins.push(element);
 			}
+			else if(isValidString(element)){
+				strings.push(element);
+			}
 		});
-		rest.forEach(element =>{
-
-			if(isSelector(element)){
-				// TODO: support both id and class
-				if(startsWith(element, '#')){
-					params['id'] = element.slice(1);
+		strings.forEach(string =>{
+			if(isSelector(string)){
+				// TODO: support both id and class - #id.class
+				if(startsWith(string, '#')){
+					params['id'] = string.slice(1);
 				}
-				if(startsWith(element, '.')){
-					params['class'] = element.slice(1);
+				if(startsWith(string, '.')){
+					params['class'] = string.slice(1);
 				}
 			}
-			else if(isValidString(element)){
+			else if(isValidString(string)){
 				if(resolvers[tagName]){
-					resolvers[tagName](params, element);
+					resolvers[tagName](params, string);
 				}
 			}
 		});
