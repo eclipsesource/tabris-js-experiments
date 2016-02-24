@@ -22,18 +22,13 @@ function RenderTree (elemName = "Composite", params= {}, children = [], mixins =
 	return elem;
 }
 
-// Generic helpers. Some borrowed from https://github.com/ohanhi/hyperscript-helpers/blob/master/src/index.js
-const inputType     = param => Array.isArray(param)? 'array' : typeof param;
-const isValidString = param => typeof param === 'string' && param.length > 0;
-const startsWith    = (string, start) => string[0] === start;
-const isSelector    = param => isValidString(param) && (startsWith(param, '.') || startsWith(param, '#'));
+
 
 // This function creates the renderer.
-// For production use the approach will be a bit different to allow better tooling with IDEs
+// For production the approach will be a bit different to allow better tooling with IDEs
 const createRender = function(tagName){
 	return (...rest) => {
 		let children = [], params= {}, mixins =[], strings= [];
-		// TODO: clean up these functions
 		rest.forEach(element =>{
 			let elemType = inputType (element);
 			if(elemType === 'array'){
@@ -48,27 +43,18 @@ const createRender = function(tagName){
 			else if(isValidString(element)){
 				strings.push(element);
 			}
+			else if(elemType === 'number'){
+				mixins.push(element.toString());
+			}
 		});
 		strings.forEach(string =>{
-			if(isSelector(string)){
-				// TODO: support both id and class - #id.class
-				if(startsWith(string, '#')){
-					params['id'] = string.slice(1);
-				}
-				if(startsWith(string, '.')){
-					params['class'] = string.slice(1);
-				}
-			}
-			else if(isValidString(string)){
-				if(resolvers[tagName]){
-					resolvers[tagName](params, string);
-				}
+			if(resolvers[tagName]){
+				resolvers[tagName](params, string);
 			}
 		});
 		return RenderTree(tagName, params, children, mixins);
 	};
 }
-
 
 export const Page = createRender ("Page");
 export const WebView = createRender ("WebView");
@@ -87,7 +73,6 @@ export const PageSelector = createRender ("PageSelector");
 export const Text = createRender ("TextView");
 export const Image = createRender ("ImageView");
 
-
 /* Wildcard resolvers */
 const resolvers = {
 	Text: ( params, element ) => params["text"] = element,
@@ -97,3 +82,7 @@ const resolvers = {
 	Tab: ( params, element ) => params["title"] = element,
 	Page: ( params, element ) => params["title"] = element,
 }
+
+/* Generic helpers */
+const inputType     = param => Array.isArray(param)? 'array' : typeof param;
+const isValidString = param => typeof param === 'string' && param.length > 0;

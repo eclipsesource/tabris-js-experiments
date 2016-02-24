@@ -33,22 +33,16 @@ const styles = {
 	full: {left: 0, top: 0, right: 0, bottom: 0},
 };
 
-const generalStyles= {
-	'#appDrawer': {
-		background: 'white'
-	}
-};
-
 
 /*************************
  * Application Start
  *************************/
 
 function AppNavigationStart(){
-	// Drawer Init
+	// Drawer Init 
 	Drawer( {id:'appDrawer'} ,[
 		PageSelector,
-	]).apply(generalStyles);
+	])
 
 
 	// Action init
