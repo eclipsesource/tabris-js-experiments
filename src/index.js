@@ -46,13 +46,14 @@ const generalStyles= {
 
 function AppNavigationStart(){
 	// Drawer Init
-	Drawer('#appDrawer',[
+	Drawer( {id:'appDrawer'} ,[
 		PageSelector,
 	]).apply(generalStyles);
 
 
 	// Action init
-	Action('#licenseToggler',{
+	Action({
+		id:'licenseToggler',
 		title: "License",
 		placementPriority: "high",
 		image: {src: "resources/images/action_settings.png", scale: 3}
@@ -63,7 +64,6 @@ function AppNavigationStart(){
 	BookListPage("Favorite", "resources/images/page_favorite_books.png", book => book.favorite);
 
 	bookStorePage.open();
-	// tabris.ui.children("Page")[0].open();
 
 }
 
@@ -97,20 +97,20 @@ function openReadBookPage(book) {
 	return (
 		Page ( book.title , [
 			ScrollView( {layoutData: styles.full, direction: "vertical"} , [
-				Text( '.bookTitle',   book.title               , fadeIn(1000) ),
-				Text( '.bookChapter', getBookPreview(book.id)  , fadeIn(3000, 500) )
+				Text( book.title    , readBookPageStyles.bookTitle           , fadeIn(1000) ),
+				Text( getBookPreview(book.id) , readBookPageStyles.bookChapter , fadeIn(3000, 500) )
 			]),
 		]).apply(readBookPageStyles).open()
 	)
 }
 
 const readBookPageStyles = {
-	'.bookTitle':{
+	bookTitle:{
 		layoutData: {left: PAGE_MARGIN, top: PAGE_MARGIN * 2, right: PAGE_MARGIN},
 		textColor: "rgba(0, 0, 0, 0.5)",
 		font: "bold 20px",
 	},
-	'.bookChapter':{
+	bookChapter:{
 		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", PAGE_MARGIN], bottom: PAGE_MARGIN},
 	}
 };
@@ -127,15 +127,18 @@ function BooksList(books) {
 			items: books,
 			initializeCell: (cell) => {
 				[
-					Image('.bookImage', {
+					Image({
+						class: 'bookImage',
 						layoutData: {left: PAGE_MARGIN, centerY: 0, width: 32, height: 48},
 						scaleMode: "fit"
 					}),
-					Text('.bookTitle', {
+					Text({
+						class: 'bookTitle',
 						layoutData: {left: 64, right: PAGE_MARGIN, top: PAGE_MARGIN},
 						textColor: "#4a4a4a"
 					}),
-					Text('.bookAuthor', {
+					Text({
+						class:'bookAuthor',
 						layoutData: {left: 64, right: PAGE_MARGIN, top: ["prev()", 4]},
 						textColor: "#7b7b7b"
 					})
@@ -187,7 +190,7 @@ const bookDetailsStyle = {
 		left: 0, top: "prev()", right: 0
 	},
 	price: {
-		left: 0, top: ["prev()",PAGE_MARGIN],
+		left: 0, top:  ["prev()",PAGE_MARGIN],
 		textColor: "rgb(102, 153, 0)"
 	}
 }

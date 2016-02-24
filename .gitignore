@@ -20,3 +20,5 @@ coverage
 # Eclipse IDE
 .project
 .settings/
+
+dist/App.js
