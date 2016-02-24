@@ -56,6 +56,7 @@ const createRender = function(tagName){
 	};
 }
 
+/* The components that create Tabris.js widgets */
 export const Page = createRender ("Page");
 export const WebView = createRender ("WebView");
 export const TextView = createRender ("TextView");
@@ -69,7 +70,7 @@ export const Action = createRender ("Action");
 export const Drawer = createRender ("Drawer");
 export const PageSelector = createRender ("PageSelector");
 
-/* Alias */
+/* Alias for easier usage */
 export const Text = createRender ("TextView");
 export const Image = createRender ("ImageView");
 
