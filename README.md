@@ -1,4 +1,4 @@
-Experiments with tabris.js using hyperscript templates and ES6
+Experiments with tabris.js ES6 + Declarative UI
 ====================
 
 # Introduction
