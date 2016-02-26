@@ -1,0 +1,14 @@
+{
+  "name": "es6tests",
+  "description": "Tests for the existance of JavaScript features/APIs.",
+  "dependencies": {
+    "http-server": "^0.9.0",
+    "tabris": "^1.6.0"
+  },
+  "scripts": {
+    "native": "node ./src/tests.js",
+    "babel": "babel src -d lib && node ./lib/tests.js",
+    "tabris": "babel src -d lib && hs"
+  },
+  "main": "app.js"
+}
