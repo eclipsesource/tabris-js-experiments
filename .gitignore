@@ -1,0 +1,25 @@
+# Created by .ignore support plugin (hsz.mobi)
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+
+npm-debug.log
+node_modules
+coverage
+.DS_Store
+.idea/
+
+# Eclipse IDE
+.project
+.settings/
+
+es6_declarative_ui/dist/App.js
