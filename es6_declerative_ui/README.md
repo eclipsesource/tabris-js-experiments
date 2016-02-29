@@ -24,6 +24,9 @@ function BookDetails(book) {
 }
 ```
 
+![Native UI demo](https://tabrisjs.com/assets/public-content/img/examples/bookstore.gif)
+
+
 # Setup
 
 Seting up is really easy (you just node node installed):
