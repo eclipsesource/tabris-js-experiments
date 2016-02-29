@@ -48,7 +48,7 @@ Connect to your code from the Tabris.js Developer App ([Play Store](https://play
 
 # Contribute
 
-Please read the related blog post on: [TODO INSERT]
+Please read the related blog post on: [Eclipsesource Blog](http://eclipsesource.com/blogs/2016/02/29/tabris-js-declarative-ui-in-100-lines-of-functional-programming/)
 
 For any questions ping me: shai@eclipsesource.com
 
