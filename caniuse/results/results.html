@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+    <!--
+    @import url("styles.css");
+    -->
+    </style>    
+    <script type="text/javascript">
+      
+      var platforms = ["Android", "iOS", "windows", "node"];
+      
+      window.onload = function() {
+        document.getElementById("filterCheckbox").addEventListener("change", handleFilter);
+        Promise.all(platforms.map(platform => getData(platform))).then(rawData => {
+          var tableData = createTableData(rawData);
+          var syntax = tableData.Syntax;
+          document.body.appendChild(html("h2", "Syntax"));
+          document.body.appendChild(createTable(syntax, createFeatureCell));
+          delete tableData.Syntax;
+          for (var category in tableData) {
+            document.body.appendChild(html("h2", category));
+            document.body.appendChild(createTable(tableData[category], createAPICell));
+          }
+        });
+        handleFilter();
+      };
+      
+      function handleFilter() {
+        var filter = document.getElementById("filterCheckbox").checked;
+        if (filter) {
+          document.body.classList.add("dofilter");
+        } else {
+          document.body.classList.remove("dofilter");
+        }
+      }
+      
+      
+      function getData(platform) {
+        return fetch("./" + platform.toLowerCase() + ".json").then(response => response.json());
+      }
+
+      function createTableData(rawData) {
+        var tableData = {};
+        platforms.forEach((platform, index) => {
+          var platformData = rawData[index];
+          for (var category in platformData) {
+            tableData[category] = tableData[category] ? tableData[category] : {};
+            mergeCategory(tableData[category], platformData[category], platform);
+          }
+        });
+        return tableData;
+      }
+      
+      function mergeCategory(target, source, platform) {
+        for (var feature in source) {
+          target[feature] = target[feature] ? target[feature] : {};
+          target[feature][platform] = source[feature];
+        }
+      }      
+      
+      function createTable(data, cellFactory) {
+        var table = html("table");
+        var header = html("thead");
+        var headerRow = html("tr");
+        table.appendChild(header);
+        header.appendChild(headerRow);
+        headerRow.appendChild(html("th", "Feature"));
+        platforms.forEach(platform => {
+          headerRow.appendChild(html("th", platform));
+        });
+        for (var feature in data) {
+          var tr = html("tr");
+          var hasFails = false;
+          tr.appendChild(html("td", feature));
+          platforms.forEach(platform => {
+            var cell = cellFactory(data[feature][platform]);
+            tr.appendChild(cell);
+            hasFails = hasFails || cell.classList.contains("fail");
+          });
+          if (!hasFails) {
+            tr.classList.add("filter");
+          } 
+          table.appendChild(tr);
+        }
+        return table;
+      }
+      
+      function createAPICell(testResult) {
+        var success = typeof testResult === "string";
+        return html(
+          "td",
+          success ? "Y" : "N",
+          {
+            "class": success ? "success" : "fail",
+            "title": success ? testResult : "undefined"
+          }
+        );
+      }
+
+      function createFeatureCell(testResult) {
+        var success = testResult === true;
+        return html(
+          "td",
+          success ? "Y" : "N",
+          {
+            "class": success ? "success" : "fail",
+            "title": success ? "Supported" : "Failed with \"" + testResult + "\""
+          }
+        );
+      }
+      
+      function html(tag, content, attr) {
+        var el = document.createElement(tag);
+        if (typeof content === "string") {
+          var textEl = document.createTextNode(content);
+          el.appendChild(textEl);
+        }
+        for (var attribute in attr) {
+          el.setAttribute(attribute, attr[attribute]);
+        }
+        return el;
+      }
+      
+    </script>
+  </head>
+  <body>
+      <ul>
+        <li>Android: Tabris.js 1.6</li>
+        <li>iOS Version 8.3</li>
+        <li>Windows Version 10.0.10586 (x64   Pro)</li>
+        <li>Node: V5.2.0 (for comparison)</li>
+      </ul>
+      <p>
+        <input type="checkbox" id="filterCheckbox">Hide all-green rows</input>
+        </p>
+  </body>
+</html>
