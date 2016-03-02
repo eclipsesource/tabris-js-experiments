@@ -6,11 +6,11 @@
     <!--
     @import url("styles.css");
     -->
-    </style>    
+    </style>
     <script type="text/javascript">
-      
+
       var platforms = ["Android", "iOS", "windows", "node"];
-      
+
       window.onload = function() {
         document.getElementById("filterCheckbox").addEventListener("change", handleFilter);
         Promise.all(platforms.map(platform => getData(platform))).then(rawData => {
@@ -26,7 +26,7 @@
         });
         handleFilter();
       };
-      
+
       function handleFilter() {
         var filter = document.getElementById("filterCheckbox").checked;
         if (filter) {
@@ -35,8 +35,8 @@
           document.body.classList.remove("dofilter");
         }
       }
-      
-      
+
+
       function getData(platform) {
         return fetch("./" + platform.toLowerCase() + ".json").then(response => response.json());
       }
@@ -52,14 +52,14 @@
         });
         return tableData;
       }
-      
+
       function mergeCategory(target, source, platform) {
         for (var feature in source) {
           target[feature] = target[feature] ? target[feature] : {};
           target[feature][platform] = source[feature];
         }
-      }      
-      
+      }
+
       function createTable(data, cellFactory) {
         var table = html("table");
         var header = html("thead");
@@ -81,12 +81,12 @@
           });
           if (!hasFails) {
             tr.classList.add("filter");
-          } 
+          }
           table.appendChild(tr);
         }
         return table;
       }
-      
+
       function createAPICell(testResult) {
         var success = typeof testResult === "string";
         return html(
@@ -110,7 +110,7 @@
           }
         );
       }
-      
+
       function html(tag, content, attr) {
         var el = document.createElement(tag);
         if (typeof content === "string") {
@@ -122,18 +122,18 @@
         }
         return el;
       }
-      
+
     </script>
   </head>
   <body>
-      <ul>
-        <li>Android: Tabris.js 1.6</li>
-        <li>iOS Version 8.3</li>
-        <li>Windows Version 10.0.10586 (x64   Pro)</li>
-        <li>Node: V5.2.0 (for comparison)</li>
-      </ul>
-      <p>
-        <input type="checkbox" id="filterCheckbox">Hide all-green rows</input>
-        </p>
+    <ul>
+      <li>Android: Tabris.js 1.6</li>
+      <li>iOS Version 8.3</li>
+      <li>Windows Version 10.0.10586 (x64   Pro)</li>
+      <li>Node: V5.2.0 (for comparison)</li>
+    </ul>
+    <p>
+      <input type="checkbox" id="filterCheckbox">Hide all-green rows</input>
+    </p>
   </body>
 </html>

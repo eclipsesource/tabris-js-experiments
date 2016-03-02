@@ -1,81 +1,96 @@
 html, body {
-	margin:0;
-	padding:0;
+  margin: 0;
+  padding: 0;
 }
-p { margin: 10px; }
+
+p {
+  margin: 10px;
+}
+
 h2 {
   margin: 40px 10px 20px 20px;
   font-size: 2em;
 }
+
 body {
-	background: #fff;
-	font: 1em "Trebuchet MS",Verdana,Arial,Helvetica,sans-serif;
-	}
+  background: #fff;
+  font: 1em "Trebuchet MS",Verdana,Arial,Helvetica,sans-serif;
+}
+
 table {
-	width:95%;
-	border-top:1px solid #e5eff8;
-	border-right:1px solid #e5eff8;
-	margin:1em auto;
-		border-collapse:collapse;
-	}
-	
+  width: 95%;
+  border-top: 1px solid #e5eff8;
+  border-right: 1px solid #e5eff8;
+  margin: 1em auto;
+  border-collapse: collapse;
+}
+
 td {
-	border-bottom:1px solid #e5eff8;
-	border-left:1px solid #e5eff8;
-	padding:.3em 1em;
+  border-bottom: 1px solid #e5eff8;
+  border-left: 1px solid #e5eff8;
+  padding: .3em 1em;
   text-align: center;
-	}				
+}
+
 td:first-child {
-	background: rgba(60, 220, 250, 0.3);
-	text-align:left;
+  background: rgba(60, 220, 250, 0.5);
+  text-align: left;
   width: 200px;
-	}				
+}
+
 th {
-	font-weight:normal;
-	color: #678197;
-	text-align:center;
-	border-bottom: 1px solid #e5eff8;
-	border-left:1px solid #e5eff8;
-	padding:.3em 1em;
-	}							
+  font-weight: normal;
+  color: #678197;
+  text-align: center;
+  border-bottom: 1px solid #e5eff8;
+  border-left: 1px solid #e5eff8;
+  padding: .3em 1em;
+}
+
 th:first-child {
-	text-align:left;
+  text-align: left;
   width: 200px;
-	}
-  thead th {
-	background:#f4f9fe;
-	font:bold 1.4em "Century Gothic","Trebuchet MS",Arial,Helvetica,sans-serif;
-	color:#66a3d3
-	}	
+}
+
+thead th {
+  background: #f4f9fe;
+  font: bold 1.4em "Century Gothic","Trebuchet MS",Arial,Helvetica,sans-serif;
+  color: #66a3d3
+}
+
 tfoot th {
-	background:#f4f9fe;
-	}	
+  background: #f4f9fe;
+}
+
 tr {
-	color: white;
+  color: white;
   background: lightgrey;
 }
+
 tr:hover {
   background: white;
-	color: black;
+  color: black;
 }
+
 tfoot th strong {
-	font:bold 1.2em "Century Gothic","Trebuchet MS",Arial,Helvetica,sans-serif;
-	margin:.5em .5em .5em 0;
-	color:#66a3d3;
-		}		
+  font: bold 1.2em "Century Gothic","Trebuchet MS",Arial,Helvetica,sans-serif;
+  margin: .5em .5em .5em 0;
+  color: #66a3d3;
+}
+
 tfoot th em {
-	color:#f03b58;
-	font-weight: bold;
-	font-size: 1.1em;
-	font-style: normal;
-	}	
-  
+  color: #f03b58;
+  font-weight: bold;
+  font-size: 1.1em;
+  font-style: normal;
+}
+
 .success {
-  background-color: rgba(100, 250, 100, 0.6);
+  background-color: rgba(50, 250, 50, 0.6);
 }
 
 .fail {
-  background-color: rgba(250, 100, 100, 0.6);
+  background-color: rgba(250, 50, 50, 0.6);
 }
 
 .dofilter .filter {

@@ -31,8 +31,8 @@ var syntaxTests = {
     callback(name, foo.result === 3);
   },
   "let (strict mode)": function(name, callback) {
-     var result = new Function("'use strict'; let x = 1; {let x = 2;} return x;")();
-     callback(name, result === 1);    
+    var result = new Function("'use strict'; let x = 1; {let x = 2;} return x;")();
+    callback(name, result === 1);
   },
   "Classes (non-strict)": function(name, callback) {
     var Foo = (new Function("class Foo { constructor(a, b) { this.x = a; this.y = b;} get result() { return this.x + this.y; }} return Foo; "))();
@@ -40,18 +40,18 @@ var syntaxTests = {
     callback(name, foo.result === 3);
   },
   "let (non-strict)": function(name, callback) {
-     var result = new Function("let x = 1; {let x = 2;} return x;")();
-     callback(name, result === 1);    
+    var result = new Function("let x = 1; {let x = 2;} return x;")();
+    callback(name, result === 1);
   },
   "const (strict mode)": function(name, callback) {
     var o;
     var error = null;
     try {
-       o = new Function("'use strict'; const x = 1; return {get: function() {return x;}, set: function(y) { x = y;}};")();
+      o = new Function("'use strict'; const x = 1; return {get: function() {return x;}, set: function(y) { x = y;}};")();
     } catch(ex) {
       // Chakra won't even parse an assignment to const
       error = ex;
-       o = new Function("'use strict'; const x = 1; return {get: function() {return x;}, set: function(y) {}};")();
+      o = new Function("'use strict'; const x = 1; return {get: function() {return x;}, set: function(y) {}};")();
     }
     try {
       o.set(23);
@@ -64,11 +64,11 @@ var syntaxTests = {
     var o;
     var error = null;
     try {
-       o = new Function("const x = 1; return {get: function() {return x;}, set: function(y) { x = y;}};")();
+      o = new Function("const x = 1; return {get: function() {return x;}, set: function(y) { x = y;}};")();
     } catch(ex) {
       // Chakra won't even parse an assignment to const
       error = ex;
-       o = new Function("const x = 1; return {get: function() {return x;}, set: function(y) {}};")();
+      o = new Function("const x = 1; return {get: function() {return x;}, set: function(y) {}};")();
     }
     try {
       o.set(23);
@@ -97,7 +97,7 @@ var syntaxTests = {
       }
     };
     var p = new Proxy(target, handler);
-    callback(name, p.world === "Hello, world!");    
+    callback(name, p.world === "Hello, world!");
   },
   "Subclass Array": function(name, callback) {
     var MyArray = new Function("'use strict'; return class MyArray extends Array {};")();
@@ -118,15 +118,15 @@ var syntaxTests = {
       this.c = a + b;
     }
     var instance = Reflect.construct(C, [20, 22]);
-    callback(name, instance.c == 42);    
+    callback(name, instance.c == 42);
   },
   "Default Parameters": function(name, callback) {
     var f = new Function("return function f (x, y = 7, z = 42) {return x + y + z;};")();
-    callback(name, f(1) === 50);    
+    callback(name, f(1) === 50);
   },
   "Rest Parameters": function(name, callback) {
     var f = new Function("return function f (x, y, ...a) {return (x + y) * a.length;};")();
-    callback(name, f(1, 2, "hello", true, 7) === 9);    
+    callback(name, f(1, 2, "hello", true, 7) === 9);
   },
   "Spread Operator": function(name, callback) {
     var result = new Function("var params = [ 'hello', true, 7 ]; return [ 1, 2, ...params ];")();
@@ -197,12 +197,12 @@ var constructorFilter = function(name) {
 
 var statics = ["Math", "JSON", "Reflect"];
 var constructors = [
-  "RegExp", 
-  "String", 
-  "Array", 
-  "Object", 
-  "Number", 
-  "Date", 
+  "RegExp",
+  "String",
+  "Array",
+  "Object",
+  "Number",
+  "Date",
   "ArrayBuffer",
   "Int8Array",
   "Uint8Array",
@@ -223,14 +223,13 @@ var constructors = [
 ];
 
 function runTests(callback) {
-    var results = {};
-    findStaticAPIs(results);
-    findTypeAPIs(results);
-    testSyntax(function(testResults) {
-      results["Syntax"] = testResults;
-      console.log(JSON.stringify(results));
-      callback();        
-    });
+  var results = {};
+  findStaticAPIs(results);
+  findTypeAPIs(results);
+  testSyntax(function(testResults) {
+    results["Syntax"] = testResults;
+    callback(results);
+  });
 }
 
 function findStaticAPIs(results) {
@@ -239,7 +238,7 @@ function findStaticAPIs(results) {
       results[name] = {};
     } else {
       results[name] = findMembers(global[name], objFilter, lookFor[name]);
-    }    
+    }
   });
 }
 
@@ -248,7 +247,7 @@ function findTypeAPIs(results) {
     var protoName = name + ".prototype";
     if (!global[name]) {
       results[name] = {};
-      results[protoName] = {}; 
+      results[protoName] = {};
     } else {
       results[name] = findMembers(global[name], constructorFilter, lookFor[name]);
       results[protoName]  = findMembers(global[name].prototype, objFilter, lookFor[protoName]);
@@ -257,22 +256,22 @@ function findTypeAPIs(results) {
 }
 
 function findMembers(obj, filter, also) {
-    var members = {};
-    if (!obj) {
-      obj = {};
+  var members = {};
+  if (!obj) {
+    obj = {};
+  }
+  var arr = Object.getOwnPropertyNames(obj).concat(also || []);
+  for (var i = 0; i < arr.length; i++) {
+    if ((filter && !filter(arr[i])) || members[arr[i]]) {
+      continue;
     }
-    var arr = Object.getOwnPropertyNames(obj).concat(also || []);
-    for (var i = 0; i < arr.length; i++) {
-      if ((filter && !filter(arr[i])) || members[arr[i]]) {
-        continue;
-      }
-      try {
-        members[arr[i]] = typeof obj[arr[i]]; 
-      } catch(e) {
-        members[arr[i]] = "exists";
-      }
+    try {
+      members[arr[i]] = typeof obj[arr[i]];
+    } catch(e) {
+      members[arr[i]] = "exists";
     }
-    return members;
+  }
+  return members;
 }
 
 function testSyntax(callback) {
@@ -282,7 +281,7 @@ function testSyntax(callback) {
   function handleResult(fromTest, result) {
     if (results.hasOwnProperty(fromTest)) {
       throw new Error("Duplicate reports for " + fromTest);
-    } 
+    }
     if (!syntaxTests[fromTest]) {
       throw new Error("Unknown report for " + fromTest);
     }
@@ -304,11 +303,9 @@ function testSyntax(callback) {
         syntaxTests[test](test, handleResult);
       } catch(e) {
         handleResult(test, e.message);
-      }        
+      }
     });
   }
 }
 
-runTests(function() {
-  console.log("DONE"); 
-});    
+exports.runTests = runTests;
