@@ -4,7 +4,20 @@
 
 To experiment with Angular2 apps on Tabris.js, the module `tabris-ng` re-exports Angular2 with a renderer for Tabris.js.
 
-The folder `src/example/` contains a simple example application.
+## Example App
+
+The folder `src/example/` contains a simple example application. The `tabris-ng` module can also be installed from this URL:
+
+    "dependencies": {
+      "tabris-ng": "https://github.com/eclipsesource/tabris-js-experiments/releases/download/tabris-ng-0.1.0/tabris-ng-0.1.0.tgz",
+      ...
+    }
+
+### Start HTTP Server with example app
+
+    npm start
+
+## Build the tabris-ng module
 
 ### Prepare
 
@@ -12,7 +25,7 @@ The folder `src/example/` contains a simple example application.
     npm install -g webpack
     npm install
 
-### Compile
+### Compile TypeScript
 
     tsc -p .
 
@@ -20,11 +33,11 @@ The folder `src/example/` contains a simple example application.
 
     npm run build
 
-This will create a file `dist/tabris-ng.js`.
+This will create the file `dist/tabris-ng.js`.
 
-### Start HTTP Server with example app
+    npm pack
 
-    npm start
+will create a tgz file that can be used as a dependency.
 
 ## License
 
