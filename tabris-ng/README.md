@@ -4,7 +4,7 @@
 
 To experiment with Angular2 apps on Tabris.js, the module `tabris-ng` re-exports Angular2 with a renderer for Tabris.js.
 
-The folder `src/app/` contains a simple example application.
+The folder `src/example/` contains a simple example application.
 
 ### Prepare
 
@@ -20,7 +20,7 @@ The folder `src/app/` contains a simple example application.
 
     npm run build
 
-This will create a file `tabris-ng.js` in `node_modules/`.
+This will create a file `dist/tabris-ng.js`.
 
 ### Start HTTP Server with example app
 

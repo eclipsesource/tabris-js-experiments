@@ -6,7 +6,7 @@ var OccurenceOrderPlugin = require('webpack/lib/optimize/OccurenceOrderPlugin');
 module.exports = {
   entry: "./src/tabris-bootstrap.js",
   output: {
-    filename: "node_modules/tabris-ng.js",
+    filename: "dist/tabris-ng.js",
     library: "tabris-ng",
     libraryTarget: "commonjs2"
   },
