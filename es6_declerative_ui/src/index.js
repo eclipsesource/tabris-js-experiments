@@ -1,7 +1,7 @@
-/*************************
+ /*************************
  * Import Components
  *************************/
-import { Page, WebView, TextView, Text, ScrollView, TabFolder, Tab, Composite, Image, ImageView, CollectionView, Action, Drawer, PageSelector} from './tabris/components';
+import { Page, WebView, TextView, Text, ScrollView, TabFolder, Tab, Composite, Image, ImageView, CollectionView, Action, Drawer, PageSelector, TextInput} from './tabris/components';
 import { Spacer, Each } from './components/custom';
 
 /*************************
@@ -15,6 +15,7 @@ import { fadeIn, fadeInRight , fadeInLeft, fadeInDown, fadeInUp } from './tabris
  *************************/
 import { getBooks, getRelatedBooks, getBookComments, getBookPreview } from "./books/books-service";
 import { license } from './dummy/texts';
+const _ = require('lodash');
 
 /*************************
  * Constants
@@ -33,6 +34,7 @@ const styles = {
 	full: {left: 0, top: 0, right: 0, bottom: 0},
 };
 
+ import {getMessage} from './talks';
 
 /*************************
  * Application Start
@@ -53,13 +55,348 @@ function AppNavigationStart(){
 		image: {src: "resources/images/action_settings.png", scale: 3}
 	}).on("select", openLicensePage);
 
-	let bookStorePage = BookListPage("Book Store", "resources/images/page_all_books.png");
-	BookListPage("Popular", "resources/images/page_popular_books.png", book => book.popular);
-	BookListPage("Favorite", "resources/images/page_favorite_books.png", book => book.favorite);
+	//let bookStorePage = BookListPage("Book Store", "resources/images/page_all_books.png");
+	//BookListPage("Popular", "resources/images/page_popular_books.png", book => book.popular);
+	//BookListPage("Favorite", "resources/images/page_favorite_books.png", book => book.favorite);
+	//
+	//bookStorePage.open();
+	let activeChatPage = ChatPage("Book Store", "resources/images/page_all_books.png");
 
-	bookStorePage.open();
+
+	activeChatPage.open();
 
 }
+
+ /*************************
+  * Chat Pages
+  *************************/
+ let messageStyle = {
+   container:{
+	 bottom: ["prev()",10],
+	 left: 0,
+	 right: "30%"
+   },
+   bubble: {
+	 background: "#eee",
+	 cornerRadius: 15,
+	 left: 40,
+	 right: 0,
+   },
+   text: {
+	 left: 10,
+	 right: 10,
+	 top:10,
+	 bottom: 10,
+   }
+ };
+ let messageStyle22 = {
+   container:{
+	 bottom: ["prev()",10],
+	 left: 0,
+	 right: "30%"
+   },
+   bubble: {
+	 background: "#eee",
+	 cornerRadius: 15,
+	 left: 40,
+	 right: 0,
+   },
+   text: {
+	 left: 10,
+	 right: 10,
+	 top:10,
+	 bottom: 10,
+   }
+ };
+
+ let myMessageStyle = {
+   container:{
+	 bottom: ["prev()",10],
+	 left: "30%",
+	 right: 0,
+   },
+   bubble: {
+	 background: "#ff8400",
+	 cornerRadius: 15,
+	 left: 0,
+	 right: 40,
+   },
+   text: {
+	 left: 10,
+	 right: 10,
+	 top:10,
+	 bottom: 10,
+   }
+ };
+
+ //function ChatMessage(text, from){
+ //  return Composite(styles.stack, [
+	// Composite(messageStyle.container,[
+	//   Composite(messageStyle.bubble, [
+	//	 Text(".messageText",text,messageStyle.text)
+	//   ])
+	// ])
+ //  ]);
+ //}
+
+
+ //function ChatPage(title, image , filter) {
+ //  let scrollr;
+ //  let pagerrrr = Page ({
+	// title: title,
+	// topLevel: true,
+	// image: {src: image, scale: 3}
+ //  }, [
+	// Composite("#stack", _.extend(styles.full,{bottom:10}), [
+	//   scrollr = Composite({left:0,right:0},[
+	//	 ChatMessage("Helloq 1"),
+	//	 ChatMessage(`With the rise of mobile devices, many sites have moved to HTML5 for rich media content. It’s considerably more efficient and allows for better scaling across devices. Even advertisers have gotten on board with HTML5. This is probably one of the reasons Google is finally looking to deemphasize Flash content. Most of Google’s revenue comes from selling ads, and it announced several months ago that it would phase out Flash ads on AdWords at the end of 2016. It will stop accepting new submissions for Flash ads on June 30th.`),
+	//	 ChatMessage(`Google calls this approach “HTML5 by Default.” Chrome has shipped with a bundled version of Flash player for several years now, and it will continue to do so. This was never an endorsement of Flash, merely a recognition of the security risk. At least by bundling the latest version with Chrome, users wouldn’t be running old and insecure builds. When Google flips the switch on this plan, that plugin won’t load automatically Flash content when you just happen across it. That’s only feasible because you see much less Flash on the web now.`),
+	//	 ChatMessage("Helloq resources/ images/ page_favorit e_books.png 5"),
+	//	 ChatMessage("Helloq 6"),
+	//   ])
+ //
+	//   //Spacer({height:10,color:"white"})
+	// ])
+ //  ]);
+ //
+	//scrollr.on("pan:vertical", function(widget, event) {
+	//  //handlePan(event, container);
+	//  let newTranslate, lastTransformY =  scrollr.get("lastTransformY");
+	//  if(lastTransformY && event.translation){
+	//	newTranslate = lastTransformY + event.translation.y;
+	//  }
+	//  else {
+	//	newTranslate = event.translation.y;
+	//  }
+ //
+	//  console.log("pan : " +newTranslate);
+ //
+	//  scrollr.set("transform", {translationY: newTranslate});
+	//  if (event.state === "end") {
+	//	console.log("Saved : "+ newTranslate);
+	//	scrollr.set("lastTransformY",newTranslate);
+	//  }
+ //
+	//})
+ //  return (
+	// pagerrrr
+ //  )
+ //}
+
+
+
+
+
+ //function ChatPage(title, image , filter) {
+ //  let scrollr, last;
+ //  let pagerrrr = Page ({
+	// title: title,
+	// topLevel: true,
+	// image: {src: image, scale: 3}
+ //  }, [
+	// scrollr = ScrollView("#stack", _.extend(styles.full,{bottom:10}), [
+	//   ChatMessage("Helloq 1"),
+	//   ChatMessage(`With the rise of mobile devices, many sites have moved to HTML5 for rich media content. It’s considerably more efficient and allows for better scaling across devices. Even advertisers have gotten on board with HTML5. This is probably one of the reasons Google is finally looking to deemphasize Flash content. Most of Google’s revenue comes from selling ads, and it announced several months ago that it would phase out Flash ads on AdWords at the end of 2016. It will stop accepting new submissions for Flash ads on June 30th.`),
+	//   ChatMessage(`Google calls this approach “HTML5 by Default.” Chrome has shipped with a bundled version of Flash player for several years now, and it will continue to do so. This was never an endorsement of Flash, merely a recognition of the security risk. At least by bundling the latest version with Chrome, users wouldn’t be running old and insecure builds. When Google flips the switch on this plan, that plugin won’t load automatically Flash content when you just happen across it. That’s only feasible because you see much less Flash on the web now.`),
+	//   ChatMessage("Helloq resources/ images/ page_favorit e_books.png 5"),
+	//   last = ChatMessage("Helloq 6"),
+	//   //Spacer({height:10,color:"white"})
+	// ])
+ //  ]);
+ //
+ //
+ //  function AppendChat(text){
+	// //let scrollY = scrollr.get('scrollY');
+	// //console.log("Before: "+scrollY);
+	// ChatMessage(text).insertAfter(last);
+	// //scrollr.set('scrollY',scrollY);
+	// //console.log("Immediately After: "+scrollr.get('scrollY'));
+	// //setTimeout (()=>{
+	// //  console.log("1 ms After: "+scrollr.get('scrollY'));
+	// //  scrollr.set('scrollY',scrollY);
+	// //},1);
+	// //
+	// //setTimeout (()=>{
+	// //  console.log("100 ms After: "+scrollr.get('scrollY'));
+	// //},100);
+	// //
+	// //setTimeout (()=>{
+	// //  console.log("1000 ms After: "+scrollr.get('scrollY'));
+	// //},1000);
+ //  }
+	//let base = 2000;
+ //  setTimeout (()=>{
+	// AppendChat("So what do you think?");
+ //  },base);
+ //
+ //  return (
+	// pagerrrr
+ //  )
+ //}
+
+
+ function ChatMessage(text, from){
+   let textElem,container,bubble,ui = Composite(styles.stack, [
+	 container = Composite(messageStyle.container,[
+	   bubble = Composite(messageStyle.bubble, [
+		 textElem =Text(".messageText",text,messageStyle.text)
+	   ])
+	 ])
+   ]);
+   return {
+	 textElem, ui,container,bubble,
+   }
+   return ui;
+ }
+
+
+var arrGood = [
+`With the rise of mobile devices, many sites have moved to HTML5 for rich media content. It’s considerably more efficient and allows for better scaling across devices. Even advertisers have gotten on board with HTML5. This is probably one of the reasons Google is finally looking to deemphasize Flash content. Most of Google’s revenue comes from selling ads, and it announced several months ago that it would phase out Flash ads on AdWords at the end of 2016. It will stop accepting new submissions for Flash ads on June 30th.`,
+`Google calls this approach “HTML5 by Default.” Chrome has shipped with a bundled version of Flash player for several years now, and it will continue to do so. This was never an endorsement of Flash, merely a recognition of the security risk. At least by bundling the latest version with Chrome, users wouldn’t be running old and insecure builds. When Google flips the switch on this plan, that plugin won’t load automatically Flash content when you just happen across it. That’s only feasible because you see much less Flash on the web now.`,
+"Helloq resources/ images/ page_favorit e_books.png 5",
+]
+
+ function createComments(){
+   let comments = [];
+   let count = 50, textor;
+   for (let i =0; i < count; i ++){
+	 comments.push(getMessage())
+   }
+   return comments;
+ }
+
+ function ChatPage(title, image , filter) {
+   let scrollr, textView, textCont;
+   let comments = createComments();//.concat([{dummy:true}]);
+   let cells = [];
+   let renders  = 0;
+   let pagerrrr = Page ({
+	 title: title,
+	 topLevel: true,
+	 image: {src: image, scale: 3}
+   }, [
+	 scrollr = CollectionView({
+	   layoutData: _.extend(styles.full,{bottom:60}),
+	   itemHeight: 'auto',
+	   items: comments,
+	   initializeCell: (cell) => {
+
+		 cell.set({background:'white'})
+		 let bubble = ChatMessage("hi");
+		   bubble.ui.appendTo(cell);
+
+		 cells.push(cell);
+
+		 cell.on("change:item", function(widget, message) {
+			//console.log(++renders);
+		   //if(message.dummy){
+				//cell.set({opacity:0});
+			//}
+		    //else {
+			 // cell.set({opacity:1});
+			  if(message.byMe){
+				bubble.container.set(myMessageStyle.container);
+				bubble.bubble.set(myMessageStyle.bubble);
+				bubble.textElem.set(_.extend ( {text: message.text } , myMessageStyle.text ));
+			  }
+			  else {
+				bubble.container.set(messageStyle22.container);
+				bubble.bubble.set(messageStyle22.bubble);
+				bubble.textElem.set(_.extend ( {text: message.text } , messageStyle22.text ));
+			  }
+			//}
+
+		 });
+	   }
+	 }),
+
+	 textCont = Composite({
+	   left:0,right:0,bottom:0,height:60,
+	   background:'#ff8400'
+	 },[
+
+	 ])
+
+
+   ]);
+
+   TextView("Shai",styles.full).appendTo(textCont);
+
+
+   setInterval(()=>{
+
+	 let newItems = scrollr.get("items").concat([getMessage()]);
+	 scrollr.set("items", newItems);
+
+	 scrollr.reveal(newItems.length-1);
+   },4000)
+
+	//let cellPitch = 0;
+	//scrollr.on("scroll", function(widget, scroll) {
+	//  //if( widget.get('_loadingNext') || widget.get('_loadedAll') ) { return; }
+	//  let _prevDeltaY = widget.get('_prevDeltaY') || 0;
+	//  let deltaY = scroll.deltaY;
+	//  widget.set('_prevDeltaY',deltaY);
+	//  let acceleration = deltaY - _prevDeltaY ;
+	//  //console.log(JSON.stringify(scroll));
+	//  //console.log("First: "+ widget.get("firstVisibleIndex"));
+	//  //console.log("Last: "+ widget.get("lastVisibleIndex"));
+	//  let limit = 5, size = 20, accl = 2;
+	//  if (acceleration > limit) {
+	//	//console.log("acceleration: "+ acceleration);
+	//	cellPitch = Math.min(cellPitch + accl,size);
+	//	cells.forEach(cell => {
+	//	  cell.set("transform", {translationY: cellPitch + Math.floor(Math.random()*10)});
+	//	  cell.animate({transform: {translationY: 0}},{duration:100});
+	//	});
+	//  }
+	//
+	//  if (acceleration < (0-limit)) {
+	//	//console.log("acceleration: "+ acceleration);
+	//	cellPitch = Math.max(cellPitch - accl, 0-size);
+	//	cells.forEach(cell => {
+	//	  cell.set("transform", {translationY: cellPitch + Math.floor(Math.random()*10)});
+	//	  cell.animate({transform: {translationY: 0}},{duration:100});
+	//	});
+	//  }
+	//
+	//  //var remaining = widget.get("items").length - widget.get("lastVisibleIndex");
+	//  //if (remaining < 8) {
+	//  //  loadMoreItems(widget, CELLS_PER_ROW);
+	//  //}
+	//
+	//  //else {
+	//	//cells.forEach(cell => {
+	//	//  cellPitch = cellPitch - 1;
+	//	//  //cell.animate({transform: {translationY: 0}},{duration:300});
+	//	//  cell.set("transform", {translationY: cellPitch});
+	//	//});
+	//  //}
+	//});
+
+
+
+
+
+
+   //
+   //function AppendChat(text){
+	// ChatMessage(text).insertAfter(last);
+   //}
+   //let base = 2000;
+   //
+   //setTimeout (()=>{
+	// AppendChat("So what do you think?");
+   //},base);
+
+   return (
+	 pagerrrr
+   )
+ }
+
+
+
 
 
 /*************************

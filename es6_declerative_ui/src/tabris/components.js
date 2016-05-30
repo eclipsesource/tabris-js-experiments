@@ -65,6 +65,7 @@ const createRender = function(tagName){
 export const Page = createRender ("Page");
 export const WebView = createRender ("WebView");
 export const TextView = createRender ("TextView");
+export const TextInput = createRender ("TextInput");
 export const ScrollView = createRender ("ScrollView");
 export const TabFolder = createRender ("TabFolder");
 export const Tab = createRender ("Tab");
