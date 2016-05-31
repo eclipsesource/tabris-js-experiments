@@ -36,6 +36,8 @@ const styles = {
 
  import {getMessage} from './talks';
 
+const Platform = tabris.device.get("platform").toLowerCase();
+const isIOS = Platform.toLowerCase() === 'ios';
 /*************************
  * Application Start
  *************************/
@@ -60,7 +62,7 @@ function AppNavigationStart(){
 	//BookListPage("Favorite", "resources/images/page_favorite_books.png", book => book.favorite);
 	//
 	//bookStorePage.open();
-	let activeChatPage = ChatPage("Book Store", "resources/images/page_all_books.png");
+	let activeChatPage = ChatPage("Chat of the day", "resources/images/page_all_books.png");
 
 
 	activeChatPage.open();
@@ -266,19 +268,66 @@ var arrGood = [
    return comments;
  }
 
+const chatStyles = {
+  TextContainerHeight: isIOS ? 40: 54,
+  TextContainerVerticalPadding: 5,
+  TextRoundContainerRadius: 8
+}
+
+
+ const chatLayouts = {
+   ios : {
+	 textContainer: {
+	   left:20,right:60,bottom:chatStyles.TextContainerVerticalPadding,top:["prev()",chatStyles.TextContainerVerticalPadding-1],
+	   //background: '#ccc',
+	   //cornerRadius: chatStyles.TextRoundContainerRadius,
+	 },
+	 textBox: {
+	   left:0,right:0,bottom:0,top:0,
+	   //background: 'white',
+	   //cornerRadius: chatStyles.TextRoundContainerRadius,
+	 },
+	 textInput: _.extend({}, styles.full ,{
+	   message: "Type something",
+	   type: "multiline",
+	   background: 'white',
+	 })
+   },
+   android: {
+	 textContainer: {
+	   left:20,right:60,bottom:chatStyles.TextContainerVerticalPadding,top:["prev()",chatStyles.TextContainerVerticalPadding-1],
+	   background: '#ccc',
+	   cornerRadius: chatStyles.TextRoundContainerRadius,
+	 },
+	 textBox: {
+	   left:1,right:1,bottom:1,top:1,
+	   background: 'white',
+	   cornerRadius: chatStyles.TextRoundContainerRadius,
+	 },
+	 textInput: _.extend({}, styles.full ,{
+	   message: "Type something",
+	   type: "multiline",
+	   background: 'white',
+	 })
+   }
+ }
+
+
  function ChatPage(title, image , filter) {
    let scrollr, textView, textCont;
    let comments = createComments();//.concat([{dummy:true}]);
    let cells = [];
    let renders  = 0;
+   let collectionStyle =  _.extend({},styles.full,{bottom:chatStyles.TextContainerHeight}) //
+
    let pagerrrr = Page ({
 	 title: title,
 	 topLevel: true,
 	 image: {src: image, scale: 3}
    }, [
 	 scrollr = CollectionView({
-	   layoutData: _.extend(styles.full,{bottom:60}),
-	   itemHeight: 'auto',
+	   layoutData: collectionStyle,// ,
+	   itemHeight: isIOS? 60 : 'auto',
 	   items: comments,
 	   initializeCell: (cell) => {
 
@@ -312,25 +361,30 @@ var arrGood = [
 	 }),
 
 	 textCont = Composite({
-	   left:0,right:0,bottom:0,height:60,
-	   background:'#ff8400'
+	   left:0,right:0,bottom:0,height:chatStyles.TextContainerHeight,
+	   background:'#eee'
 	 },[
+	   Spacer({color:"#ccc"}),
+	   Composite(chatLayouts[Platform].textContainer,[
+		 Composite(chatLayouts[Platform].textBox,[
+		   TextInput(chatLayouts[Platform].textInput)
+		 ])
+
+	   ])
 
 	 ])
 
 
    ]);
 
-   TextView("Shai",styles.full).appendTo(textCont);
 
-
-   setInterval(()=>{
-
-	 let newItems = scrollr.get("items").concat([getMessage()]);
-	 scrollr.set("items", newItems);
-
-	 scrollr.reveal(newItems.length-1);
-   },4000)
+   //setInterval(()=>{
+   //
+	// let newItems = scrollr.get("items").concat([getMessage()]);
+	// scrollr.set("items", newItems);
+   //
+	// scrollr.reveal(newItems.length-1);
+   //},4000)
 
 	//let cellPitch = 0;
 	//scrollr.on("scroll", function(widget, scroll) {
