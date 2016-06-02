@@ -231,7 +231,7 @@ const chatStyles = {
    }, [
 	 scrollr = CollectionView({
 	   layoutData: collectionStyle,// ,
-	   itemHeight: isIOS? 60 : 'auto',
+	   itemHeight: isIOS ? 60 : 'auto',//60,//
 	   items: comments,
 	   initializeCell: (cell) => {
 
@@ -276,7 +276,7 @@ const chatStyles = {
 
 	   ]),
 
-	   chatButton = Composite("#buttonSquare",{right:chatStyles.TextContainerVerticalPadding,centerY:0,width:40,height:40,background:'#ddd'},[
+	   chatButton = Composite("#buttonSquare",{right:chatStyles.TextContainerVerticalPadding,centerY:0,width:40,height:40,background:'#ddd',highlightOnTouch:true},[
 		  chatAction = Text("#chatAction","+" , {centerX:0,centerY:0})
 	   ]),
 
