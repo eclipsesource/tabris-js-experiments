@@ -792,11 +792,20 @@ const talks = [[`02-1472`,`2`,`FALSE`,`JUSTICE STEVENS`,`JUSTICE`,`PETITIONER`,`
 
 var index = (-1);
 
-export function getMessage(){
+export function getMessage(text){
+  if (text){
+   return {
+      id: index,
+      byMe: true,
+      text: text
+    }
+  }
+
+
   index+=1;
   return {
     id: index,
-	byMe: talks[index][3].indexOf('JUSTICE') === 0,
+	byMe: false,//talks[index][3].indexOf('JUSTICE') === 0,
 	text: talks[index][7]
   }
 }

@@ -50,12 +50,12 @@ function AppNavigationStart(){
 
 
 	// Action init
-	Action({
-		id:'licenseToggler',
-		title: "License",
-		placementPriority: "high",
-		image: {src: "resources/images/action_settings.png", scale: 3}
-	}).on("select", openLicensePage);
+	//Action({
+	//	id:'licenseToggler',
+	//	title: "License",
+	//	placementPriority: "high",
+	//	image: {src: "resources/images/action_settings.png", scale: 3}
+	//}).on("select", openLicensePage);
 
 	//let bookStorePage = BookListPage("Book Store", "resources/images/page_all_books.png");
 	//BookListPage("Popular", "resources/images/page_popular_books.png", book => book.popular);
@@ -261,7 +261,7 @@ var arrGood = [
 
  function createComments(){
    let comments = [];
-   let count = 50, textor;
+   let count = 5, textor;
    for (let i =0; i < count; i ++){
 	 comments.push(getMessage())
    }
@@ -278,7 +278,7 @@ const chatStyles = {
  const chatLayouts = {
    ios : {
 	 textContainer: {
-	   left:20,right:60,bottom:chatStyles.TextContainerVerticalPadding,top:["prev()",chatStyles.TextContainerVerticalPadding-1],
+	   left:20,right:100,bottom:chatStyles.TextContainerVerticalPadding,top:["prev()",chatStyles.TextContainerVerticalPadding-1],
 	   //background: '#ccc',
 	   //cornerRadius: chatStyles.TextRoundContainerRadius,
 	 },
@@ -305,20 +305,34 @@ const chatStyles = {
 	   cornerRadius: chatStyles.TextRoundContainerRadius,
 	 },
 	 textInput: _.extend({}, styles.full ,{
-	   message: "Type something",
+	   message: "Type 22 something",
 	   type: "multiline",
 	   background: 'white',
 	 })
    }
  }
 
+ function getTextContainerHeightPitch(text){
+   let lines = text.split('\n').length;
+   return (Math.min((lines-1),6))* (isIOS? 17:22);
+   //console.log(chatStyles.TextContainerHeight)
+   //console.log(`Setting height to : ${height} for ${lines} lines`);
+
+ }
 
  function ChatPage(title, image , filter) {
-   let scrollr, textView, textCont;
+   let scrollr, textCont, textForMessage, chatAction, chatButton, activeText;
    let comments = createComments();//.concat([{dummy:true}]);
    let cells = [];
-   let renders  = 0;
    let collectionStyle =  _.extend({},styles.full,{bottom:chatStyles.TextContainerHeight}) //
+
+   function addMessage(message){
+	 let newItems = scrollr.get("items").concat([message]);
+	 scrollr.set("items", newItems);
+
+	 scrollr.reveal(newItems.length-1);
+   }
+
 
    let pagerrrr = Page ({
 	 title: title,
@@ -365,74 +379,53 @@ const chatStyles = {
 	   background:'#eee'
 	 },[
 	   Spacer({color:"#ccc"}),
-	   Composite(chatLayouts[Platform].textContainer,[
+	   Composite("#textContainer",chatLayouts[Platform].textContainer,[
 		 Composite(chatLayouts[Platform].textBox,[
-		   TextInput(chatLayouts[Platform].textInput)
+		   textForMessage = TextInput(chatLayouts[Platform].textInput)
 		 ])
 
-	   ])
+	   ]),
+
+	   chatButton = Composite("#buttonSquare",{right:chatStyles.TextContainerVerticalPadding,centerY:0,width:40,height:40,background:'#ddd'},[
+		  chatAction = Text("#chatAction","+" , {centerX:0,centerY:0})
+	   ]),
 
 	 ])
 
 
    ]);
 
+   textForMessage.on("change:text", (widget, text, options)=>{
+	 //textCont.animate(getTextContainerHeight(text));
+	 let heightPitch = getTextContainerHeightPitch(text);
+	 textCont.set({height: chatStyles.TextContainerHeight + heightPitch});
+	 scrollr.set({bottom: chatStyles.TextContainerHeight + heightPitch});
 
-   //setInterval(()=>{
-   //
-	// let newItems = scrollr.get("items").concat([getMessage()]);
-	// scrollr.set("items", newItems);
-   //
-	// scrollr.reveal(newItems.length-1);
-   //},4000)
+	  chatAction.set({text: text.length > 0 ? `Send` : `+`})
+   });
 
-	//let cellPitch = 0;
-	//scrollr.on("scroll", function(widget, scroll) {
-	//  //if( widget.get('_loadingNext') || widget.get('_loadedAll') ) { return; }
-	//  let _prevDeltaY = widget.get('_prevDeltaY') || 0;
-	//  let deltaY = scroll.deltaY;
-	//  widget.set('_prevDeltaY',deltaY);
-	//  let acceleration = deltaY - _prevDeltaY ;
-	//  //console.log(JSON.stringify(scroll));
-	//  //console.log("First: "+ widget.get("firstVisibleIndex"));
-	//  //console.log("Last: "+ widget.get("lastVisibleIndex"));
-	//  let limit = 5, size = 20, accl = 2;
-	//  if (acceleration > limit) {
-	//	//console.log("acceleration: "+ acceleration);
-	//	cellPitch = Math.min(cellPitch + accl,size);
-	//	cells.forEach(cell => {
-	//	  cell.set("transform", {translationY: cellPitch + Math.floor(Math.random()*10)});
-	//	  cell.animate({transform: {translationY: 0}},{duration:100});
-	//	});
-	//  }
-	//
-	//  if (acceleration < (0-limit)) {
-	//	//console.log("acceleration: "+ acceleration);
-	//	cellPitch = Math.max(cellPitch - accl, 0-size);
-	//	cells.forEach(cell => {
-	//	  cell.set("transform", {translationY: cellPitch + Math.floor(Math.random()*10)});
-	//	  cell.animate({transform: {translationY: 0}},{duration:100});
-	//	});
-	//  }
-	//
-	//  //var remaining = widget.get("items").length - widget.get("lastVisibleIndex");
-	//  //if (remaining < 8) {
-	//  //  loadMoreItems(widget, CELLS_PER_ROW);
-	//  //}
-	//
-	//  //else {
-	//	//cells.forEach(cell => {
-	//	//  cellPitch = cellPitch - 1;
-	//	//  //cell.animate({transform: {translationY: 0}},{duration:300});
-	//	//  cell.set("transform", {translationY: cellPitch});
-	//	//});
-	//  //}
-	//});
+   chatButton.on("tap",() => {
+	 if(chatAction.get('text') === '+'){
+	   console.log("Add image");
+	 }
+	 else {
+	   //textForMessage;
+	   let newText = textForMessage.get('text');
+	   textForMessage.set({text:''});
+	   addMessage(getMessage(newText));
+
+
+	   setTimeout(()=>{
+		 addMessage(getMessage());
+	   },2000)
+	 }
+   });
 
 
 
-
-
+   setInterval(()=>{
+	 addMessage(getMessage());
+   },14000)
 
    //
    //function AppendChat(text){
@@ -452,260 +445,249 @@ const chatStyles = {
 
 
 
-
-/*************************
- * Book Pages
- *************************/
-function BookListPage(title, image , filter) {
-	return (
-		Page ({
-			title: title,
-			topLevel: true,
-			image: {src: image, scale: 3}
-		}, [
-			BooksList( getBooks(filter) ),
-		])
-	)
-}
-
-function openBookPage(book) {
-	return (
-		Page ( book.title , [
-			BookDetails(book),
-			Spacer(),
-			BookTabs(book),
-		]).open()
-	)
-}
-
-function openReadBookPage(book) {
-	return (
-		Page ( book.title , [
-			ScrollView( {layoutData: styles.full, direction: "vertical"} , [
-				Text( book.title    , readBookPageStyles.bookTitle           , fadeIn(1000) ),
-				Text( getBookPreview(book.id) , readBookPageStyles.bookChapter , fadeIn(3000, 500) )
-			]),
-		]).apply(readBookPageStyles).open()
-	)
-}
-
-const readBookPageStyles = {
-	bookTitle:{
-		layoutData: {left: PAGE_MARGIN, top: PAGE_MARGIN * 2, right: PAGE_MARGIN},
-		textColor: "rgba(0, 0, 0, 0.5)",
-		font: "bold 20px",
-	},
-	bookChapter:{
-		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", PAGE_MARGIN], bottom: PAGE_MARGIN},
-	}
-};
-
-/*************************
- * Book Sub-components
- *************************/
-
-function BooksList(books) {
-	return (
-		CollectionView({
-			layoutData: styles.full,
-			itemHeight: 72,
-			items: books,
-			initializeCell: (cell) => {
-				[
-					Image({
-						class: 'bookImage',
-						layoutData: {left: PAGE_MARGIN, centerY: 0, width: 32, height: 48},
-						scaleMode: "fit"
-					}),
-					Text({
-						class: 'bookTitle',
-						layoutData: {left: 64, right: PAGE_MARGIN, top: PAGE_MARGIN},
-						textColor: "#4a4a4a"
-					}),
-					Text({
-						class:'bookAuthor',
-						layoutData: {left: 64, right: PAGE_MARGIN, top: ["prev()", 4]},
-						textColor: "#7b7b7b"
-					})
-				].forEach(elem => elem.appendTo(cell))
-
-				cell.on("change:item", function(widget, book) {
-					cell.children(".bookImage").set("image",book.image);
-					cell.children(".bookTitle").set("text",book.title);
-					cell.children(".bookAuthor").set("text",book.author);
-				});
-			}
-		}).on("select", (target, value) => { openBookPage(value) })
-	)
-}
-
-function BookDetails(book) {
-	return (
-		Composite( bookDetailsStyle.container,[
-			Image( book.image, bookDetailsStyle.image, fadeIn(800) ),
-			Composite( bookDetailsStyle.textContainer , [
-				Text( book.title , bookDetailsStyle.title  , fadeInRight(500, 100) ),
-				Text( book.author, bookDetailsStyle.author , fadeInRight(500, 300) ),
-				Text( book.price , bookDetailsStyle.price  , fadeInRight(500, 500) )
-			])
-		]).on("tap",  () => { openReadBookPage(book) })
-	)
-}
-
-
-const bookDetailsStyle = {
-	container: {
-		background: "white",
-		highlightOnTouch: true,
-		top: 0, height: 192, left: 0, right: 0
-	},
-	image: {
-		height: 160, width: 106, left: PAGE_MARGIN, top: PAGE_MARGIN
-	},
-	textContainer: {
-		left: ["prev()", PAGE_MARGIN],
-		top: PAGE_MARGIN,
-		right: PAGE_MARGIN
-	},
-	title: {
-		font: "bold 20px",
-		left: 0, top: "prev()", right: 0
-	},
-	author: {
-		left: 0, top: "prev()", right: 0
-	},
-	price: {
-		left: 0, top:  ["prev()",PAGE_MARGIN],
-		textColor: "rgb(102, 153, 0)"
-	}
-}
-
-function BookTabs(book) {
-	return (
-		TabFolder ({
-			tabBarLocation: "top",
-			paging: true,
-			layoutData: {top: "prev()", left: 0, right: 0, bottom: 0}
-		}, [
-			// Related Tab
-			Tab('Related',[
-				BooksList(getRelatedBooks(book.id))
-			]),
-			// Comments Tab
-			Tab('Comments',[
-				CommentsList(getBookComments(book.id))
-			])
-		])
-	)
-}
-
-function CommentsList(comments = []) {
-	return (
-		ScrollView(styles.full,
-			// An example of an Each (items, component, fallback_for_empty_arr)
-			Each (comments, CommentItem, NoComments)
-		)
-	)
-}
-
-function CommentItem(comment) {
-	return (
-		Composite( commentStyling.commentContainer, [
-			Image( comment.user.avatar , commentStyling.commenterAvatar),
-			Text ( comment.user.name   , commentStyling.commentAuthor  ),
-			Text ( comment.text       , commentStyling.commentText     )
-		]).apply(commentStyling)
-	)
-}
-
-function NoComments() {
-	return (
-		Composite(commentStyling.commentContainer, [
-			Text('No comments yet for this item :(', commentStyling.noComments),
-		])
-	)
-}
-
-const commentStyling = {
-	commentContainer: styles.stackMargin,
-	commenterAvatar: {
-		left: PAGE_MARGIN,
-		top: 10,
-		width: 32,
-		height: 48,
-		scaleMode: "fit",
-	},
-	commentText:{
-		left: 64,
-		right: PAGE_MARGIN,
-		top: "prev()",
-		textColor: "#7b7b7b",
-	},
-	commentAuthor:{
-		left: 64,
-		right: PAGE_MARGIN,
-		top: 15,
-		textColor: "#000000",
-	},
-	noComments: {
-		left: 64,
-		right: PAGE_MARGIN,
-		top: 15,
-		textColor: "#000000",
-		font: "bold 16px",
-	}
-}
-
-
-/*************************
- * License Pages
- *************************/
-
-const licenseConfig = {
-	header: {
-		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", 10]},
-	},
-	caption: {
-		textColor: "rgba(71, 161, 238, 0.75)",
-		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", 10]}
-	},
-	authors: {
-		markupEnabled: true,
-		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", 10]}
-	}
-}
-
-function openLicensePage() {
-	return (
-		Page ("License", [
-			Text( license.header,       licenseConfig.header  ),
-			Text( license.link.caption, licenseConfig.caption ).on("tap", openLicenseWebPage ),
-			Text( license.authors,      licenseConfig.authors )
-		])
-		.on("appear", () => actionVisbility(false) )
-		.on("disappear", () => actionVisbility(true) )
-		.open()
-	)
-}
-
-function openLicenseWebPage() {
-	return (
-		Page (license.link.caption ,[
-			WebView ({
-				layoutData: styles.full,
-				url: license.link.url
-			})
-		])
-		.on("appear", () => actionVisbility(false) )
-		.open()
-
-	)
-}
-
-function actionVisbility(isVisible){
-	tabris.ui.children("#licenseToggler").set('visible',isVisible);
-}
-
+//
+///*************************
+// * Book Pages
+// *************************/
+//
+//function openBookPage(book) {
+//	return (
+//		Page ( book.title , [
+//			BookDetails(book),
+//			Spacer(),
+//			BookTabs(book),
+//		]).open()
+//	)
+//}
+//
+//function openReadBookPage(book) {
+//	return (
+//		Page ( book.title , [
+//			ScrollView( {layoutData: styles.full, direction: "vertical"} , [
+//				Text( book.title    , readBookPageStyles.bookTitle           , fadeIn(1000) ),
+//				Text( getBookPreview(book.id) , readBookPageStyles.bookChapter , fadeIn(3000, 500) )
+//			]),
+//		]).apply(readBookPageStyles).open()
+//	)
+//}
+//
+//const readBookPageStyles = {
+//	bookTitle:{
+//		layoutData: {left: PAGE_MARGIN, top: PAGE_MARGIN * 2, right: PAGE_MARGIN},
+//		textColor: "rgba(0, 0, 0, 0.5)",
+//		font: "bold 20px",
+//	},
+//	bookChapter:{
+//		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", PAGE_MARGIN], bottom: PAGE_MARGIN},
+//	}
+//};
+//
+///*************************
+// * Book Sub-components
+// *************************/
+//
+//function BooksList(books) {
+//	return (
+//		CollectionView({
+//			layoutData: styles.full,
+//			itemHeight: 72,
+//			items: books,
+//			initializeCell: (cell) => {
+//				[
+//					Image({
+//						class: 'bookImage',
+//						layoutData: {left: PAGE_MARGIN, centerY: 0, width: 32, height: 48},
+//						scaleMode: "fit"
+//					}),
+//					Text({
+//						class: 'bookTitle',
+//						layoutData: {left: 64, right: PAGE_MARGIN, top: PAGE_MARGIN},
+//						textColor: "#4a4a4a"
+//					}),
+//					Text({
+//						class:'bookAuthor',
+//						layoutData: {left: 64, right: PAGE_MARGIN, top: ["prev()", 4]},
+//						textColor: "#7b7b7b"
+//					})
+//				].forEach(elem => elem.appendTo(cell))
+//
+//				cell.on("change:item", function(widget, book) {
+//					cell.children(".bookImage").set("image",book.image);
+//					cell.children(".bookTitle").set("text",book.title);
+//					cell.children(".bookAuthor").set("text",book.author);
+//				});
+//			}
+//		}).on("select", (target, value) => { openBookPage(value) })
+//	)
+//}
+//
+//function BookDetails(book) {
+//	return (
+//		Composite( bookDetailsStyle.container,[
+//			Image( book.image, bookDetailsStyle.image, fadeIn(800) ),
+//			Composite( bookDetailsStyle.textContainer , [
+//				Text( book.title , bookDetailsStyle.title  , fadeInRight(500, 100) ),
+//				Text( book.author, bookDetailsStyle.author , fadeInRight(500, 300) ),
+//				Text( book.price , bookDetailsStyle.price  , fadeInRight(500, 500) )
+//			])
+//		]).on("tap",  () => { openReadBookPage(book) })
+//	)
+//}
+//
+//
+//const bookDetailsStyle = {
+//	container: {
+//		background: "white",
+//		highlightOnTouch: true,
+//		top: 0, height: 192, left: 0, right: 0
+//	},
+//	image: {
+//		height: 160, width: 106, left: PAGE_MARGIN, top: PAGE_MARGIN
+//	},
+//	textContainer: {
+//		left: ["prev()", PAGE_MARGIN],
+//		top: PAGE_MARGIN,
+//		right: PAGE_MARGIN
+//	},
+//	title: {
+//		font: "bold 20px",
+//		left: 0, top: "prev()", right: 0
+//	},
+//	author: {
+//		left: 0, top: "prev()", right: 0
+//	},
+//	price: {
+//		left: 0, top:  ["prev()",PAGE_MARGIN],
+//		textColor: "rgb(102, 153, 0)"
+//	}
+//}
+//
+//function BookTabs(book) {
+//	return (
+//		TabFolder ({
+//			tabBarLocation: "top",
+//			paging: true,
+//			layoutData: {top: "prev()", left: 0, right: 0, bottom: 0}
+//		}, [
+//			// Related Tab
+//			Tab('Related',[
+//				BooksList(getRelatedBooks(book.id))
+//			]),
+//			// Comments Tab
+//			Tab('Comments',[
+//				CommentsList(getBookComments(book.id))
+//			])
+//		])
+//	)
+//}
+//
+//function CommentsList(comments = []) {
+//	return (
+//		ScrollView(styles.full,
+//			// An example of an Each (items, component, fallback_for_empty_arr)
+//			Each (comments, CommentItem, NoComments)
+//		)
+//	)
+//}
+//
+//function CommentItem(comment) {
+//	return (
+//		Composite( commentStyling.commentContainer, [
+//			Image( comment.user.avatar , commentStyling.commenterAvatar),
+//			Text ( comment.user.name   , commentStyling.commentAuthor  ),
+//			Text ( comment.text       , commentStyling.commentText     )
+//		]).apply(commentStyling)
+//	)
+//}
+//
+//function NoComments() {
+//	return (
+//		Composite(commentStyling.commentContainer, [
+//			Text('No comments yet for this item :(', commentStyling.noComments),
+//		])
+//	)
+//}
+//
+//const commentStyling = {
+//	commentContainer: styles.stackMargin,
+//	commenterAvatar: {
+//		left: PAGE_MARGIN,
+//		top: 10,
+//		width: 32,
+//		height: 48,
+//		scaleMode: "fit",
+//	},
+//	commentText:{
+//		left: 64,
+//		right: PAGE_MARGIN,
+//		top: "prev()",
+//		textColor: "#7b7b7b",
+//	},
+//	commentAuthor:{
+//		left: 64,
+//		right: PAGE_MARGIN,
+//		top: 15,
+//		textColor: "#000000",
+//	},
+//	noComments: {
+//		left: 64,
+//		right: PAGE_MARGIN,
+//		top: 15,
+//		textColor: "#000000",
+//		font: "bold 16px",
+//	}
+//}
+//
+//
+///*************************
+// * License Pages
+// *************************/
+//
+//const licenseConfig = {
+//	header: {
+//		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", 10]},
+//	},
+//	caption: {
+//		textColor: "rgba(71, 161, 238, 0.75)",
+//		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", 10]}
+//	},
+//	authors: {
+//		markupEnabled: true,
+//		layoutData: {left: PAGE_MARGIN, right: PAGE_MARGIN, top: ["prev()", 10]}
+//	}
+//}
+//
+//function openLicensePage() {
+//	return (
+//		Page ("License", [
+//			Text( license.header,       licenseConfig.header  ),
+//			Text( license.link.caption, licenseConfig.caption ).on("tap", openLicenseWebPage ),
+//			Text( license.authors,      licenseConfig.authors )
+//		])
+//		.on("appear", () => actionVisbility(false) )
+//		.on("disappear", () => actionVisbility(true) )
+//		.open()
+//	)
+//}
+//
+//function openLicenseWebPage() {
+//	return (
+//		Page (license.link.caption ,[
+//			WebView ({
+//				layoutData: styles.full,
+//				url: license.link.url
+//			})
+//		])
+//		.on("appear", () => actionVisbility(false) )
+//		.open()
+//
+//	)
+//}
+//
+//function actionVisbility(isVisible){
+//	tabris.ui.children("#licenseToggler").set('visible',isVisible);
+//}
+//
 
 /*************************
  * Main
