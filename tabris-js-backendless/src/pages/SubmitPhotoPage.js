@@ -7,13 +7,12 @@ export default class extends Page {
 	super({
 	  title: 'Backendless Connector'
 	});
-	let img;
-	console.log(base64Prefix(imageData.src));
+
 	this.append(
-	  img = new ImageView({...FULL})
+	  new ImageView({...FULL,
+		image: {src: base64Prefix(imageData.src)}
+	  })
 	)
-	this.set({img});
-	this.get('img').set("image", {src: base64Prefix(imageData.src)});
   }
 }
 
