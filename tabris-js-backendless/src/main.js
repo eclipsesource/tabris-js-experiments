@@ -11,5 +11,3 @@ let page = new MainPage().open();
 //  console.log(err);
 //})
 
-console.log(Int8Array);
-//console.log(FileReader);
