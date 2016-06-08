@@ -1,0 +1,11 @@
+# IDEs
+.idea/
+
+# Node
+npm-debug.log
+
+# Generated
+dist/
+build/
+node_modules/
+.babelrc
