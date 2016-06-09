@@ -12,8 +12,8 @@ export default class extends Tab {
 	});
 	this.append(
 	  new Composite({centerY:0,left:0,right:0, height: 220}).append(
-		Button("Take New Photo", {top: 0}).on("tap",this.takePhoto.bind(this)),
-		Button("Choose From Gallery", {bottom: 0}).on("tap",this.getGalleyPhoto.bind(this))
+		Button("Take New Photo", {top: 10}).on("tap",this.takePhoto.bind(this)),
+		Button("Choose From Gallery", {bottom: 10}).on("tap",this.getGalleyPhoto.bind(this))
 	  )
 
 	);
@@ -28,20 +28,10 @@ export default class extends Tab {
 
   getPhoto(source){
 	let onSuccess =(imageData)=> {
-	  //saveFile(imageData)
-		//.then(result => {
-		//  console.log("SUCCESS");
-		//  console.log(result);
-		//})
-		//.catch(err => {
-		//  console.log("FAIL");
-		//  console.log(err);
-		//});
 	  new SubmitPhotoPage(imageData).open();
 	}
 	let onFail = (message) => {
 	  // Cancelled image.
-	  //console.log("Camera failed because: " + message);
 	}
 	navigator.camera.getPicture(onSuccess, onFail, {
 	  quality: 50,
@@ -55,12 +45,14 @@ export default class extends Tab {
 
 
 function Button(text, config){
-  return new Composite({left:"10%",right:"10%",height:80, cornerRadius: 10, background: '#ff8400',highlightOnTouch:true,...config}).append(
-	new TextView({
-	  text,
-	  centerX:0,centerY:0,
-	  textColor:"white",
-	  font:'bold 20px',
-	})
+  return new Composite({left:"10%",right:"10%",height:80, cornerRadius: 10, background: WHITE , elevation: 2, highlightOnTouch:true,...config}).append(
+	new Composite({left:1,right:1,top:1, bottom:1, cornerRadius: 10, background: '#ff8400'}).append(
+	  new TextView({
+		text,
+		centerX:0,centerY:0,
+		textColor:"white",
+		font:'bold 20px',
+	  })
+	)
   )
 }
