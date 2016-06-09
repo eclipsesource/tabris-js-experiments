@@ -7,15 +7,13 @@ import {FULL} from './../styles/layouts';
 export default class extends Tab {
   constructor() {
 	super({title: 'Upload an image'});
-	//let img;
 	this.append(
-		Button("Take New Photo", true).on("tap",this.takePhoto.bind(this)),
-	    Button("Choose From Gallery").on("tap",this.getGalleyPhoto.bind(this))
+	  new Composite({centerY:0,left:0,right:0, height: 220}).append(
+		Button("Take New Photo", {top: 0}).on("tap",this.takePhoto.bind(this)),
+		Button("Choose From Gallery", {bottom: 0}).on("tap",this.getGalleyPhoto.bind(this))
+	  )
 
-	  //img = new ImageView({top: ["prev()", 20], left: 20, width: 200, height: 200})
 	);
-	//this.set({img});
-
   }
   takePhoto(){
 	this.getPhoto('CAMERA')
@@ -49,14 +47,13 @@ export default class extends Tab {
 	  targetHeight: 1024,
 	  destinationType: window.Camera.DestinationType.DATA_URL,
 	  sourceType: window.Camera.PictureSourceType[source]
-
 	});
   }
 }
 
 
-function Button(text, isTop){
-  return new Composite({centerY: (50* (isTop? (-1) : 1 )),left:"10%",right:"10%",height:80, background: '#ff8400',highlightOnTouch:true}).append(
+function Button(text, config){
+  return new Composite({left:"10%",right:"10%",height:80, background: '#ff8400',highlightOnTouch:true,...config}).append(
 	new TextView({
 	  text,
 	  centerX:0,centerY:0,
