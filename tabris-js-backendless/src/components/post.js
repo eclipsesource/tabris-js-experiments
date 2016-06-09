@@ -26,6 +26,7 @@ export default class extends Composite {
 		  // Actual Content goes here !
 		  _elements.title = new TextView({top: 0, height: 40, left: 60, right: 10}),
 		  _elements.image = new ImageView({...FULL, top:40, bottom: 15})
+
 		)
 
 	  )
@@ -40,48 +41,18 @@ export default class extends Composite {
   updateElements(item){
 	let _elements = this.get('_elements');
 	_elements.title.set({text:item.title});
-	_elements.image.set({image:{src:item.image}});
+	updateImage(_elements.image,item.image);
   }
-  //
-  //getGalleyPhoto(){
-	//this.getPhoto('PHOTOLIBRARY')
-  //}
-  //
-  //getPhoto(source){
-	//let onSuccess =(imageData)=> {
-	//  //saveFile(imageData)
-	//  //.then(result => {
-	//  //  console.log("SUCCESS");
-	//  //  console.log(result);
-	//  //})
-	//  //.catch(err => {
-	//  //  console.log("FAIL");
-	//  //  console.log(err);
-	//  //});
-	//  new SubmitPhotoPage(imageData).open();
-	//}
-	//let onFail = (message) => {
-	//  // Cancelled image.
-	//  //console.log("Camera failed because: " + message);
-	//}
-	//navigator.camera.getPicture(onSuccess, onFail, {
-	//  quality: 50,
-	//  targetWidth: 1024,
-	//  targetHeight: 1024,
-	//  destinationType: window.Camera.DestinationType.DATA_URL,
-	//  sourceType: window.Camera.PictureSourceType[source]
-	//});
-  //}
 }
 
-
-function Button(text, config){
-  return new Composite({left:"10%",right:"10%",height:80, cornerRadius: 10, background: '#ff8400',highlightOnTouch:true,...config}).append(
-	new TextView({
-	  text,
-	  centerX:0,centerY:0,
-	  textColor:"white",
-	  font:'bold 20px',
-	})
-  )
+let updateImage = (imageView, newUrl) => {
+  let existingImage = imageView.get('image');
+  if(  !(existingImage && existingImage.src === newUrl)){
+	// Image actually changed
+	imageView.set( {image: undefined});
+  }
+  setTimeout(function(){
+	imageView.set( {image: {src: newUrl}} );
+  },1);
 }
+
