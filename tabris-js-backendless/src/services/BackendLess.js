@@ -46,9 +46,6 @@ export function saveFile(fileContent){
 
 
 
-
-
-
 function Post(args) {
   args = args || {};
   this.image = args.image || "";

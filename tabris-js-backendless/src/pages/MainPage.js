@@ -4,6 +4,8 @@
 import {Page, TabFolder, Tab, ui,TextView, ImageView} from 'tabris';
 
 import uploadTab from './../tabs/upload';
+import feedTab from './../tabs/feed';
+
 import {FULL} from './../styles/layouts';
 
 export default class extends Page {
@@ -16,11 +18,9 @@ export default class extends Page {
 
     this.append(
       new TabFolder(FULL).append(
-        new Tab({title: `Feed`}).append(
-          new TextView({text:'Tab 1'})
-        ),
+        new feedTab(),
         new uploadTab(),
-        new Tab({title: `User`}).append(
+        new Tab({title: `Profile`}).append(
           new TextView({text:'Tab 3'})
         )
       )
