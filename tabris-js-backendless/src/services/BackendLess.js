@@ -30,7 +30,7 @@ export function saveFile(fileContent){
           resolve(JSON.parse(xhr.responseText));
         }
         else {
-          reject({error: "Something went wrong uploading to backendless.com"});
+          reject({error: "Something went wrong uploading to backendless.com. Status: "+xhr.status+ " Error: " + xhr.responseText});
         }
       }
     };
