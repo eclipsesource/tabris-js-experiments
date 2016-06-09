@@ -1,7 +1,7 @@
 import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView, CollectionView} from 'tabris';
 import {getPosts} from './../services/BackendLess';
 import {FULL} from './../styles/layouts';
-
+import PostView from './../components/post';
 
 export default class extends Tab {
   constructor() {
@@ -12,25 +12,22 @@ export default class extends Tab {
 	  posts = new CollectionView({
 		...FULL,
 		items:[],
-		itemHeight: 400,
+		itemHeight: 300,
 		refreshEnabled: true,
 		initializeCell: (cell) => {
-		  let title, img;
+		  let post
 		  cell.append(
-			img = new ImageView({...FULL}),
-			title = new TextView({...FULL})
+			post = new PostView()
 		  )
 		  cell.on("change:item", (widget, item) => {
-			title.set({text:item.title});
-			img.set({image:{src:item.image}});
+			post.updateElements(item);
 		  });
 		}
 	  })
-	  .on('refresh', widget => {
-		this.refreshItems( widget );
-	  })
+	  .on('refresh', this.refreshItems)
 	);
 	this.refreshItems(posts);
+
   }
 
   refreshItems(widget){
