@@ -16,11 +16,11 @@ export default class extends Page {
 
     this.append(
       new TabFolder(FULL).append(
-        new Tab({title: 'Tab 1'}).append(
+        new Tab({title: `Feed`}).append(
           new TextView({text:'Tab 1'})
         ),
         new uploadTab(),
-        new Tab({title: 'Tab 3'}).append(
+        new Tab({title: `User`}).append(
           new TextView({text:'Tab 3'})
         )
       )

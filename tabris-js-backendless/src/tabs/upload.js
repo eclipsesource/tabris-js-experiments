@@ -34,8 +34,7 @@ export default class extends Tab {
 		//  console.log("FAIL");
 		//  console.log(err);
 		//});
-	  //this.get('img').set("image", {src: base64Prefix(imageData)});
-	  new SubmitPhotoPage({src:imageData}).open();
+	  new SubmitPhotoPage(imageData).open();
 	}
 	let onFail = (message) => {
 	  // Cancelled image.
@@ -53,7 +52,7 @@ export default class extends Tab {
 
 
 function Button(text, config){
-  return new Composite({left:"10%",right:"10%",height:80, background: '#ff8400',highlightOnTouch:true,...config}).append(
+  return new Composite({left:"10%",right:"10%",height:80, cornerRadius: 10, background: '#ff8400',highlightOnTouch:true,...config}).append(
 	new TextView({
 	  text,
 	  centerX:0,centerY:0,

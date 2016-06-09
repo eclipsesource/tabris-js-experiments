@@ -10,14 +10,6 @@ Backendless.enablePromises();
 
 
 ////
-//function Comment(args) {
-//  args = args || {};
-//  this.message = args.message || "";
-//  this.authorEmail = args.authorEmail || "";
-//}
-//var dataStore = Backendless.Persistence.of(Comment);
-//var commentObject = new Comment({message: "I'm in", authorEmail: user.email})
-//dataStore.save( commentObject );
 
 export function registerUser(email,password){
   let user = new Backendless.User();
@@ -50,6 +42,39 @@ export function saveFile(fileContent){
     xhr.send(fileContent);
   });
 }
+
+
+
+
+
+
+
+function Post(args) {
+  args = args || {};
+  this.image = args.image || "";
+  this.title = args.title || "";
+  this.authorEmail = args.authorEmail || "";
+}
+const PostsStore = Backendless.Persistence.of(Post);
+
+export function savePost(postConfig){
+  return PostsStore.save( new Post(postConfig) );
+}
+
+export function getPosts(postConfig){
+  return PostsStore.find();
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
