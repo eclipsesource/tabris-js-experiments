@@ -2,11 +2,14 @@ import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView} from 'tabris';
 import {saveFile} from './../services/BackendLess';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 import {FULL} from './../styles/layouts';
-
+import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 
 export default class extends Tab {
   constructor() {
-	super({title: 'Upload an image'});
+	super({
+	  title: 'Upload an image',
+	  background:BACKGROUND
+	});
 	this.append(
 	  new Composite({centerY:0,left:0,right:0, height: 220}).append(
 		Button("Take New Photo", {top: 0}).on("tap",this.takePhoto.bind(this)),

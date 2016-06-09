@@ -12,8 +12,9 @@ export default class extends Composite {
 	let _elements = {};
 	this.append(
 	  new Composite({
-		left:10, right:10, top:10,bottom: 0,
+		left:5, right:10, top:10,bottom: 5,
 		cornerRadius:10,
+		elevation: 1,
 		background: BORDER,
 	  }).append(
 

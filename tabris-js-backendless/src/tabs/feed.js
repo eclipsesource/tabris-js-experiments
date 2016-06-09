@@ -1,18 +1,23 @@
 import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView, CollectionView} from 'tabris';
 import {getPosts} from './../services/BackendLess';
-import {FULL} from './../styles/layouts';
+import {FULL , COLUMN_COUNT} from './../styles/layouts';
 import PostView from './../components/post';
+import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 
 export default class extends Tab {
   constructor() {
-	super({title: 'Feed'});
+	super({
+	  title: 'Feed',
+	  background:BACKGROUND
+	});
 	let posts;
-
+	console.log(COLUMN_COUNT);
 	this.append(
 	  posts = new CollectionView({
 		...FULL,
 		items:[],
 		itemHeight: 300,
+		columnCount: COLUMN_COUNT,
 		refreshEnabled: true,
 		initializeCell: (cell) => {
 		  let post
