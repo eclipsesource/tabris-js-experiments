@@ -1,8 +1,5 @@
 import {Composite, TextView} from 'tabris';
-import {FULL} from './../styles/layouts';
-
 import {BUTTON, WHITE} from './../styles/colors';
-
 
 const buttonLayout = {
   container: {
@@ -22,10 +19,9 @@ const buttonLayout = {
   text : {
 	centerX:0,centerY:0,
 	textColor: WHITE,
-	font: 'bold 20px',
+	font: 'bold 20px'
   }
-}
-
+};
 
 export default class extends Composite {
   constructor(text, config) {
