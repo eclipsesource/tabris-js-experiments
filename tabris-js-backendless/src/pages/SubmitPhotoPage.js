@@ -10,18 +10,35 @@ const isIOS = Platform.toLowerCase() === 'ios';
 
 const chatStyles = {
   TextContainerHeight: isIOS ? 60: 80,
-  TextContainerVerticalPadding: 12,
+  TextContainerVerticalPadding: MARGIN,
   TextRoundContainerRadius: 8
 }
 
 const chatLayouts = {
-
-	textContainer: {
-	  left:MARGIN,right:"26%",bottom:chatStyles.TextContainerVerticalPadding,top:chatStyles.TextContainerVerticalPadding,
-	},
-	textInput: {...FULL,
-	  background: WHITE,
-	}
+  textContainer: {
+	left:0,right:0,bottom:0,height:chatStyles.TextContainerHeight,
+	elevation:8,
+	background:'#eee'
+  },
+  inputContainer: {
+	left: MARGIN,
+	right: "26%",
+	bottom: chatStyles.TextContainerVerticalPadding,
+	top: chatStyles.TextContainerVerticalPadding,
+  },
+  textInput: {
+	...FULL,
+	message:`Give this image a title (Optional)!`,
+	background: WHITE,
+  },
+  submitButton: {
+	left: ["prev()", MARGIN],
+	right: MARGIN,
+	height: undefined,
+	bottom: chatStyles.TextContainerVerticalPadding,
+	top: chatStyles.TextContainerVerticalPadding,
+	TextRoundContainerRadius: 8
+  }
 
 };
 
@@ -46,30 +63,24 @@ export default class extends Page {
 	  }),
 
 
-	  textContainer = new Composite({
-		left:0,right:0,bottom:0,height:chatStyles.TextContainerHeight,
-		elevation:8,
-		background:'#eee'
-	  }).append(
+	  textContainer = new Composite(chatLayouts.textContainer).append(
 		//Spacer({color:"#ccc"}),
-		new Composite(chatLayouts.textContainer).append(
+		new Composite(chatLayouts.inputContainer).append(
 
-			postTitle = new TextInput({...chatLayouts.textInput,
-			  id:`newPhotoText`,
-			  message:`Give this image a title (Optional)!`
-			}).on("focus",() => {
-				animateProp(submitImage,96);
-				animateProp(textContainer,-11);
+			postTitle = new TextInput(chatLayouts.textInput)
+			  .on("focus",() => {
+				animatePitch(submitImage,96);
+				animatePitch(textContainer,-11);
 			  })
 			  .on("blur", () => {
 				console.log("Lost focus - Android bug");
-				animateProp(submitImage,0);
-				animateProp(textContainer,0);
+				animatePitch(submitImage,0);
+				animatePitch(textContainer,0);
 			  })
 
 		),
 
-		submitButton = new Button("Submit", {left: ["prev()",MARGIN], right: MARGIN, height: undefined, bottom:chatStyles.TextContainerVerticalPadding,top:chatStyles.TextContainerVerticalPadding , TextRoundContainerRadius: 8}, {TextRoundContainerRadius: 8,font: 'bold 16px'})
+		submitButton = new Button("Submit", chatLayouts.submitButton, {TextRoundContainerRadius: 8,font: 'bold 16px'})
 		.on('tap', () => {
 		  this.submitPost();
 		})
@@ -131,7 +142,7 @@ function base64Prefix(src){
   return `data:image/jpeg;base64,${src}`;
 }
 
-function animateProp(elem, trans){
+function animatePitch(elem, trans){
   elem.animate({
 	transform: {
 	  translationY: trans,
