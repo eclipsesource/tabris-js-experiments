@@ -10,10 +10,9 @@ export default class extends Tab {
 	  title: 'Feed',
 	  background:BACKGROUND
 	});
-	let posts;
-	console.log(COLUMN_COUNT);
+	let postsCollectionView;
 	this.append(
-	  posts = new CollectionView({
+	  postsCollectionView = new CollectionView({
 		...FULL,
 		items:[],
 		itemHeight: 300,
@@ -31,15 +30,16 @@ export default class extends Tab {
 	  })
 	  .on('refresh', this.refreshItems)
 	);
-	this.refreshItems(posts);
+	this.refreshItems(postsCollectionView);
 
   }
 
-  refreshItems(widget){
-
+  refreshItems(postsCollectionView){
+	postsCollectionView.set({
+	  refreshIndicator: true
+	});
 	getPosts().then(results => {
-	  console.log(results.data.length);
-	  widget.set({
+	  postsCollectionView.set({
 		items: results.data,
 		refreshIndicator: false
 	  })
