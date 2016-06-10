@@ -1,6 +1,8 @@
-import {Page, TextInput, Tab, ui,TextView, ImageView} from 'tabris';
-import {FULL} from './../styles/layouts';
-import {saveFile, savePost} from './../services/BackendLess';
+import {Page, TextInput, Tab, ui,TextView, ImageView , ActivityIndicator} from 'tabris';
+import {FULL, CENTER, HIDE, SHOW} from './../styles/layouts';
+import {savePostWithImage} from './../services/BackendLess';
+
+import {backToFeed} from './../services/Navigation';
 
 export default class extends Page {
 
@@ -9,7 +11,7 @@ export default class extends Page {
 	  title: 'Submit this photo!'
 	});
 	this.set('imageData',imageData);
-	let submitButton, submitImage, postTitle;
+	let submitButton, submitImage, postTitle, loading;
 	// TODO: add action ?
 	this.append(
 
@@ -49,44 +51,59 @@ export default class extends Page {
 		alignment: `center`
 	  })
 	  .on('tap', () => {
-		this.submitImage();
-	  })
+		this.submitPost();
+	  }),
+
+
+	  loading = new ActivityIndicator({...CENTER, ...HIDE})
 	)
 	this.set('_elements',{
 	  submitImage,
 	  postTitle,
-	  submitButton
+	  submitButton,
+	  loading
 	})
   }
 
-  submitImage(){
+  submitPost(){
+	this.submitImageLoading();
 	let imageData = this.get('imageData');
-	saveFile(imageData)
-	.then(newImageUrl => {
-	  console.log("SUCCESS");
-	  console.log(newImageUrl);
-	  this.submitPost(newImageUrl);
-	})
-	.catch(err => {
-	  console.log("FAIL");
-	  console.log(err);
-	});
-  }
-
-  submitPost(imgUrl){
-	savePost({
-	  image:imgUrl,
+	savePostWithImage({
+	  imageData,
 	  title: this.get('_elements').postTitle.get('text'),
 	  authorEmail: 'shai@eclipsespource.com'
 	}).then(response => {
 		console.log("SUCCESS");
 		console.log(response);
+	  	this.leavePage();
 	  })
 	  .catch(err => {
 		console.log("FAIL");
 		console.log(err);
+		this.leavePage();
 	  });
   }
+
+  leavePage(){
+	console.log("LEAVE 1");
+	backToFeed();
+
+	console.log("LEAVE 4");
+	this.close();
+  }
+
+  submitImageLoading(){
+	let _elements =  this.get('_elements');
+	_elements.postTitle.set(HIDE);
+	_elements.submitButton.set(HIDE);
+	_elements.loading.set(SHOW);
+	_elements.submitImage.animate(HIDE, {
+	  duration: 400,
+	  easing: "ease-in-out",
+	});
+
+  }
+
 }
 
 function base64Prefix(src){

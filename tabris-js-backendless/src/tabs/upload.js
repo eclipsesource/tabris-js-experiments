@@ -9,6 +9,7 @@ export default class extends Tab {
   constructor() {
 	super({
 	  title: 'Upload an image',
+	  description: 'Select Method to Upload',
 	  background:BACKGROUND
 	});
 	this.append(

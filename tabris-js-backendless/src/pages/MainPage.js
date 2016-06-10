@@ -9,31 +9,42 @@ import feedTab from './../tabs/feed';
 import {FULL, TABBAR_LOCATION} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION , NAVIGATION_COLORS} from './../styles/colors';
 
+import {registerNavigation} from './../services/Navigation';
+
+
+const mainLayout = {
+  page : {
+    topLevel: true,
+    title: 'Backendless Connector',
+    background:BACKGROUND
+  },
+  navigation : {
+    ...FULL, paging:true,
+    background: NAVIGATION,
+    textColor: WHITE,
+    elevation: 8,
+    tabBarLocation: TABBAR_LOCATION
+  }
+}
+
+
 export default class extends Page {
 
   constructor() {
-    super({
-      topLevel: true,
-      title: 'Backendless Connector',
-      background:BACKGROUND
-    });
+    super(mainLayout.page);
     ui.set(NAVIGATION_COLORS);
+    let nav = {MainPage:this};
     this.append(
-      new TabFolder({
-        ...FULL, paging:true,
-        background: NAVIGATION,
-        textColor: WHITE,
-        elevation: 8,
-        tabBarLocation: TABBAR_LOCATION
-      }).append(
-        new feedTab(),
-        new uploadTab(),
+      nav.Navigation = new TabFolder(mainLayout.navigation).append(
+        nav.FeedTab = new feedTab(),
+        nav.UploadTab = new uploadTab(),
         new Tab({title: `Profile`}).append(
             new TextView({text:'Tab 3'})
           )
         )
     );
 
+    registerNavigation(nav);
   }
 
 }

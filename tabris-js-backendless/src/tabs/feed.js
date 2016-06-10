@@ -8,11 +8,14 @@ export default class extends Tab {
   constructor() {
 	super({
 	  title: 'Feed',
+	  description: 'Recent Posts Feed',
 	  background:BACKGROUND
 	});
-	let postsCollectionView;
+	this.refreshItems = this.refreshItems.bind(this);
+	let _e = {};
+
 	this.append(
-	  postsCollectionView = new CollectionView({
+	  _e.postsCollectionView = new CollectionView({
 		...FULL,
 		items:[],
 		itemHeight: 300,
@@ -30,11 +33,13 @@ export default class extends Tab {
 	  })
 	  .on('refresh', this.refreshItems)
 	);
-	this.refreshItems(postsCollectionView);
-
+	this.set({_e});
+	this.refreshItems();
   }
 
-  refreshItems(postsCollectionView){
+  refreshItems(){
+	console.log("REFRESH");
+	let postsCollectionView = this.get('_e').postsCollectionView;
 	postsCollectionView.set({
 	  refreshIndicator: true
 	});

@@ -43,9 +43,6 @@ export function saveFile(fileContent){
   });
 }
 
-
-
-
 function Post(args) {
   args = args || {};
   this.image = args.image || "";
@@ -58,12 +55,21 @@ export function savePost(postConfig){
   return PostsStore.save( new Post(postConfig) );
 }
 
-export function getPosts(postConfig){
+export function getPosts(){
   return PostsStore.find();
 }
 
 
-
+export function savePostWithImage(postConfig){
+  return saveFile(postConfig.imageData)
+      .then(newImageUrl => {
+        return savePost({
+          image:newImageUrl,
+          title: postConfig.title,
+          authorEmail: postConfig.authorEmail
+        });
+      });
+}
 
 
 
