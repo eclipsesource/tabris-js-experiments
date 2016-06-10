@@ -3,39 +3,45 @@ import {FULL} from './../styles/layouts';
 
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 
+
+const postLayout = {
+  container : {
+	...FULL,
+	background: BACKGROUND,
+  },
+  border: {
+	left:5, right:10, top:10,bottom: 5,
+	cornerRadius:10,
+	elevation: 1,
+	background: BORDER,
+  },
+  canvas: {
+	left:1, right:1, top:1,bottom: 1,
+	cornerRadius:10,
+	background: WHITE,
+  }
+
+}
+
+
 export default class extends Composite {
   constructor() {
-	super({
-	  ...FULL,
-	  background: BACKGROUND,
-	});
+	super(postLayout.container);
 	let _elements = {};
 	this.append(
-	  new Composite({
-		left:5, right:10, top:10,bottom: 5,
-		cornerRadius:10,
-		elevation: 1,
-		background: BORDER,
-	  }).append(
-
-		new Composite({
-		  left:1, right:1, top:1,bottom: 1,
-		  cornerRadius:10,
-		  background: WHITE,
-		}).append(
+	  new Composite(postLayout.border).append(
+		new Composite(postLayout.canvas).append(
 
 		  // Actual Content goes here !
 		  _elements.title = new TextView({top: 0, height: 40, left: 60, right: 10}),
 		  _elements.image = new ImageView({...FULL, top:40, bottom: 15})
 
 		)
-
 	  )
 
 	);
 
 	this.set({_elements});
-
 	this.updateElements = this.updateElements.bind(this); //ES6 hack
   }
 

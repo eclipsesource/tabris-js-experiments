@@ -1,7 +1,7 @@
 import MainPage from './pages/MainPage';
 import {registerUser} from './services/BackendLess';
 
-let page = new MainPage().open();
+new MainPage().open();
 
 //registerUser('shaialon84@gmail.com','hold-the-door-hodor').then(response=>{
 //  console.log("SUCCESS");
