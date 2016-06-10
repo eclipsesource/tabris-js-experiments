@@ -1,59 +1,79 @@
-import {Page, TextInput, Tab, ui,TextView, ImageView , ActivityIndicator} from 'tabris';
-import {FULL, CENTER, HIDE, SHOW} from './../styles/layouts';
+import {Page, TextInput, Tab, ui,TextView, ImageView , ActivityIndicator, Composite} from 'tabris';
+import {FULL, CENTER, HIDE, SHOW , MARGIN} from './../styles/layouts';
 import {savePostWithImage} from './../services/BackendLess';
-
 import {backToFeed} from './../services/Navigation';
+import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
+import Button from './../components/button';
+
+const Platform = tabris.device.get("platform").toLowerCase();
+const isIOS = Platform.toLowerCase() === 'ios';
+
+const chatStyles = {
+  TextContainerHeight: isIOS ? 60: 80,
+  TextContainerVerticalPadding: 12,
+  TextRoundContainerRadius: 8
+}
+
+const chatLayouts = {
+
+	textContainer: {
+	  left:MARGIN,right:"26%",bottom:chatStyles.TextContainerVerticalPadding,top:chatStyles.TextContainerVerticalPadding,
+	},
+	textInput: {...FULL,
+	  background: WHITE,
+	}
+
+};
 
 export default class extends Page {
 
   constructor(imageData) {
 	super({
-	  title: 'Submit this photo!'
+	  title: 'Submit this photo!',
+	  background: BACKGROUND
 	});
 	this.set('imageData',imageData);
 	let submitButton, submitImage, postTitle, loading;
-	// TODO: add action ?
+	let textContainer;
 	this.append(
 
 	  submitImage = new ImageView({
 		id:`newPhoto`,
 		...FULL,
+		bottom: chatStyles.TextContainerHeight,
 		scaleMode: `fit`,
-		//top: ["prev()",20],left:"10%",right:"10%",
-		//height: 300,
 		image: {src: base64Prefix(imageData)}
 	  }),
 
-	  postTitle = new TextInput({
-		id:`newPhotoText`,
-		top: 20,left:"10%",right:"10%",
-		message:`Give this image a title (Optional)!`
-	  })
-	  .on("focus",() => {
-		animateProp(submitImage,-100);
-		animateProp(submitButton,-400);
-	  })
-	  .on("blur", () => {
-		animateProp(submitImage,0);
-		animateProp(submitButton,0);
-	  }),
 
-	  submitButton = new TextView({
-		id:`submitButton`,
-		bottom: 20,left:"10%",right:"10%",
-		height: 50,
-		background:'#ff8400',
-		cornerRadius: 10,
-		textColor:"white",
-		font:'bold 20px',
-		highlightOnTouch: true,
-		text:`Submit Image`,
-		alignment: `center`
-	  })
-	  .on('tap', () => {
-		this.submitPost();
-	  }),
+	  textContainer = new Composite({
+		left:0,right:0,bottom:0,height:chatStyles.TextContainerHeight,
+		elevation:8,
+		background:'#eee'
+	  }).append(
+		//Spacer({color:"#ccc"}),
+		new Composite(chatLayouts.textContainer).append(
 
+			postTitle = new TextInput({...chatLayouts.textInput,
+			  id:`newPhotoText`,
+			  message:`Give this image a title (Optional)!`
+			}).on("focus",() => {
+				animateProp(submitImage,96);
+				animateProp(textContainer,-11);
+			  })
+			  .on("blur", () => {
+				console.log("Lost focus - Android bug");
+				animateProp(submitImage,0);
+				animateProp(textContainer,0);
+			  })
+
+		),
+
+		submitButton = new Button("Submit", {left: ["prev()",MARGIN], right: MARGIN, height: undefined, bottom:chatStyles.TextContainerVerticalPadding,top:chatStyles.TextContainerVerticalPadding , TextRoundContainerRadius: 8}, {TextRoundContainerRadius: 8,font: 'bold 16px'})
+		.on('tap', () => {
+		  this.submitPost();
+		})
+	  ),
 
 	  loading = new ActivityIndicator({...CENTER, ...HIDE})
 	)
@@ -61,7 +81,8 @@ export default class extends Page {
 	  submitImage,
 	  postTitle,
 	  submitButton,
-	  loading
+	  loading,
+	  textContainer
 	})
   }
 
@@ -94,7 +115,7 @@ export default class extends Page {
 
   submitImageLoading(){
 	let _elements =  this.get('_elements');
-	_elements.postTitle.set(HIDE);
+	_elements.textContainer.set(HIDE);
 	_elements.submitButton.set(HIDE);
 	_elements.loading.set(SHOW);
 	_elements.submitImage.animate(HIDE, {
