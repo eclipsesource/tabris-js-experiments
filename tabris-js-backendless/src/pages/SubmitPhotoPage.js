@@ -1,5 +1,5 @@
 import {Page, TextInput, Tab, ui,TextView, ImageView , ActivityIndicator, Composite} from 'tabris';
-import {FULL, CENTER, HIDE, SHOW , MARGIN} from './../styles/layouts';
+import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED} from './../styles/layouts';
 import {savePostWithImage} from './../services/BackendLess';
 import {backToFeed} from './../services/Navigation';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
@@ -10,21 +10,23 @@ const isIOS = Platform.toLowerCase() === 'ios';
 
 const chatStyles = {
   TextContainerHeight: isIOS ? 60: 80,
-  TextContainerVerticalPadding: MARGIN,
-  TextRoundContainerRadius: 8
 }
 
-const chatLayouts = {
+const submitLayouts = {
+  newImage: {
+	...FULL,
+	bottom: chatStyles.TextContainerHeight,
+	scaleMode: `fit`,
+  },
   textContainer: {
 	left:0,right:0,bottom:0,height:chatStyles.TextContainerHeight,
 	elevation:8,
 	background:'#eee'
   },
   inputContainer: {
-	left: MARGIN,
-	right: "26%",
-	bottom: chatStyles.TextContainerVerticalPadding,
-	top: chatStyles.TextContainerVerticalPadding,
+	...PADDED,
+	right: "26%"
+
   },
   textInput: {
 	...FULL,
@@ -32,12 +34,10 @@ const chatLayouts = {
 	background: WHITE,
   },
   submitButton: {
+	...PADDED,
 	left: ["prev()", MARGIN],
 	right: MARGIN,
 	height: undefined,
-	bottom: chatStyles.TextContainerVerticalPadding,
-	top: chatStyles.TextContainerVerticalPadding,
-	TextRoundContainerRadius: 8
   }
 
 };
@@ -55,19 +55,15 @@ export default class extends Page {
 	this.append(
 
 	  submitImage = new ImageView({
-		id:`newPhoto`,
-		...FULL,
-		bottom: chatStyles.TextContainerHeight,
-		scaleMode: `fit`,
+		...submitLayouts.newImage,
 		image: {src: base64Prefix(imageData)}
 	  }),
 
-
-	  textContainer = new Composite(chatLayouts.textContainer).append(
+	  textContainer = new Composite(submitLayouts.textContainer).append(
 		//Spacer({color:"#ccc"}),
-		new Composite(chatLayouts.inputContainer).append(
+		new Composite(submitLayouts.inputContainer).append(
 
-			postTitle = new TextInput(chatLayouts.textInput)
+			postTitle = new TextInput(submitLayouts.textInput)
 			  .on("focus",() => {
 				animatePitch(submitImage,96);
 				animatePitch(textContainer,-11);
@@ -80,7 +76,7 @@ export default class extends Page {
 
 		),
 
-		submitButton = new Button("Submit", chatLayouts.submitButton, {TextRoundContainerRadius: 8,font: 'bold 16px'})
+		submitButton = new Button("Submit", submitLayouts.submitButton, {font: 'bold 16px'})
 		.on('tap', () => {
 		  this.submitPost();
 		})
