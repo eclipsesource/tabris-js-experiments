@@ -8,18 +8,16 @@ import Button from './../components/button';
 const Platform = tabris.device.get("platform").toLowerCase();
 const isIOS = Platform.toLowerCase() === 'ios';
 
-const chatStyles = {
-  TextContainerHeight: isIOS ? 60: 80,
-}
+const TextContainerHeight = isIOS ? 60: 80;
 
 const submitLayouts = {
   newImage: {
 	...FULL,
-	bottom: chatStyles.TextContainerHeight,
+	bottom: TextContainerHeight,
 	scaleMode: `fit`,
   },
   textContainer: {
-	left:0,right:0,bottom:0,height:chatStyles.TextContainerHeight,
+	left:0,right:0,bottom:0,height:TextContainerHeight,
 	elevation:8,
 	background:'#eee'
   },
