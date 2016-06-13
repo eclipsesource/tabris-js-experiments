@@ -5,6 +5,7 @@ import {Page, TabFolder, Tab, ui,TextView, ImageView} from 'tabris';
 
 import uploadTab from './../tabs/upload';
 import feedTab from './../tabs/feed';
+import profileTab from './../tabs/profile';
 
 import {FULL, TABBAR_LOCATION} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION , NAVIGATION_COLORS} from './../styles/colors';
@@ -38,10 +39,8 @@ export default class extends Page {
       nav.Navigation = new TabFolder(mainLayout.navigation).append(
         nav.FeedTab = new feedTab(),
         nav.UploadTab = new uploadTab(),
-        new Tab({title: `Profile`}).append(
-            new TextView({text:'Tab 3'})
-          )
-        )
+        nav.ProfileTab = new profileTab()
+      )
     );
 
     registerNavigation(nav);
