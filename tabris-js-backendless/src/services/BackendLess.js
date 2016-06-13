@@ -7,16 +7,18 @@ const APPLICATION_ID = '20B6BCEC-3854-082A-FFEB-62B6E777F500',
 Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
 Backendless.enablePromises();
 
-
-
-////
-
 export function registerUser(email,password){
   let user = new Backendless.User();
   user.email = email;
   user.password = password;
-  return Backendless.UserService.register(user); //.then(userRegistered).catch(gotError);
+  return Backendless.UserService.register(user);
 }
+
+export function login(email,password){
+  return Backendless.UserService.login( email, password, true);
+}
+
+
 
 export function saveFile(fileContent){
   /****************
@@ -43,6 +45,8 @@ export function saveFile(fileContent){
   });
 }
 
+
+
 function Post(args) {
   args = args || {};
   this.image = args.image || "";
@@ -55,9 +59,13 @@ export function savePost(postConfig){
   return PostsStore.save( new Post(postConfig) );
 }
 
+var query = new Backendless.DataQuery();
+query.options = {relations:["ownerId"],pageSize: 100};
+
 export function getPosts(){
-  return PostsStore.find();
+  return PostsStore.find(query);
 }
+
 
 
 export function savePostWithImage(postConfig){
