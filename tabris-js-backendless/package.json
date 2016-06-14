@@ -1,0 +1,45 @@
+{
+  "name": "tabris-js-backendless",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "posttest": "npm run lint",
+    "watch": "npm run build:ios -- --watch",
+    "watch:ios": "npm run build:ios -- --watch",
+    "watch:android": "npm run build:android -- --watch",
+    "build": "npm run build:ios",
+    "build:ios": "babel --copy-files --compact false --out-dir dist/ src/",
+    "build:android": "babel --copy-files --compact false --out-dir dist/ src/",
+    "build:ios:production": "npm run build:ios -- --minified",
+    "build:android:production": "npm run build:android -- --minified",
+    "prebuild:ios": "npm run _babel_ios && tput setaf 2; echo 'BUILDING FOR IOS'; tput sgr0;",
+    "prebuild:android": "npm run _babel_android && tput setaf 2; echo 'BUILDING FOR ANDROID'; tput sgr0;",
+    "_setup": "npm run _cleardist && tput setaf 2; echo 'CLEAN DIST FOLDER'; tput sgr0;",
+    "_babel_ios": "cp babel-ios.json .babelrc && npm run _setup",
+    "_babel_android": "cp babel-android.json .babelrc && npm run _setup",
+    "_cleardist": "rm -rf dist/",
+    "start": "http-server -c-1 -d false"
+  },
+  "author": "Shai Alon <shaialon84@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "backendless": "^3.1.10",
+    "tabris": "https://tabrisjs.com/downloads/nightly/tabris.tgz"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.8.0",
+    "babel-core": "^6.8.0",
+    "babel-plugin-transform-es2015-arrow-functions": "^6.8.0",
+    "babel-plugin-transform-es2015-block-scoping": "^6.8.0",
+    "babel-plugin-transform-es2015-classes": "^6.8.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
+    "babel-plugin-transform-es2015-parameters": "^6.8.0",
+    "babel-plugin-transform-es2015-shorthand-properties": "^6.8.0",
+    "babel-plugin-transform-es2015-spread": "^6.8.0",
+    "babel-plugin-transform-es2015-template-literals": "^6.8.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "eslint": "^2.9.0"
+  }
+}
