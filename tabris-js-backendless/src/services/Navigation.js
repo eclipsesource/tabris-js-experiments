@@ -14,8 +14,6 @@ export function registerNavigation(newElements){
 }
 
 export function backToFeed(){
-  console.log("LEAVE 2");
   NavigationElements.Navigation.set("selection", NavigationElements.FeedTab);
-  console.log("LEAVE 3");
   NavigationElements.FeedTab.refreshItems();
 }

@@ -49,24 +49,31 @@ export function saveFile(fileContent){
 
 function Post(args) {
   args = args || {};
+  this.___class = 'Post';
   this.image = args.image || "";
   this.title = args.title || "";
-  this.authorEmail = args.authorEmail || "";
+  if(args.creatorEmail){
+    this.creatorEmail = args.creatorEmail;
+  }
 }
 const PostsStore = Backendless.Persistence.of(Post);
 
 export function savePost(postConfig){
-  return PostsStore.save( new Post(postConfig) );
+  return Backendless.UserService.getCurrentUser().then(user=> {
+    let config = {...postConfig};
+    if(user && user.email){
+      config.creatorEmail = user.email;
+    }
+    return PostsStore.save( new Post(config) );
+  }).catch(console.log);
 }
 
 var query = new Backendless.DataQuery();
-query.options = {relations:["ownerId"],pageSize: 100};
+query.options = {relations:[],pageSize: 100};
 
 export function getPosts(){
   return PostsStore.find(query);
 }
-
-
 
 export function savePostWithImage(postConfig){
   return saveFile(postConfig.imageData)

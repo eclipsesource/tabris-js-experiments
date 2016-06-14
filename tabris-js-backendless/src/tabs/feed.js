@@ -48,6 +48,10 @@ export default class extends Tab {
 		items: results.data,
 		refreshIndicator: false
 	  })
+	})
+	.catch(err =>{
+	  console.log("Error - could not get the posts");
+	  console.log(err);
 	});
 
   }

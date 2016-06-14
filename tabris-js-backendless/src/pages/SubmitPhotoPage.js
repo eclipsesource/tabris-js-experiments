@@ -96,24 +96,20 @@ export default class extends Page {
 	savePostWithImage({
 	  imageData,
 	  title: this.get('_elements').postTitle.get('text'),
-	  authorEmail: 'shai@eclipsespource.com'
 	}).then(response => {
-		console.log("SUCCESS");
-		console.log(response);
+		console.log("SAVED POST WITH IMAGE DATA");
+		//console.log(response);
 	  	this.leavePage();
 	  })
 	  .catch(err => {
-		console.log("FAIL");
+		console.log("FAILED TO SAVE POST WITH IMAGE DATA");
 		console.log(err);
 		this.leavePage();
 	  });
   }
 
   leavePage(){
-	console.log("LEAVE 1");
 	backToFeed();
-
-	console.log("LEAVE 4");
 	this.close();
   }
 
