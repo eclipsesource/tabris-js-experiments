@@ -58,13 +58,12 @@ export default class extends Page {
 	  }),
 
 	  textContainer = new Composite(submitLayouts.textContainer).append(
-		//Spacer({color:"#ccc"}),
-		new Composite(submitLayouts.inputContainer).append(
+						new Composite(submitLayouts.inputContainer).append(
 
 			postTitle = new TextInput(submitLayouts.textInput)
 			  .on("focus",() => {
 				animatePitch(submitImage,96);
-				animatePitch(textContainer,-11);
+				animatePitch(textContainer,-9);
 			  })
 			  .on("blur", () => {
 				console.log("Lost focus - Android bug");

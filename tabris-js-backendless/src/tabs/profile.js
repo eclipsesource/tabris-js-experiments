@@ -4,6 +4,7 @@ import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
 import Button from './../components/button';
+import Gravatar from './../services/Gravatar';
 
 
 const styles = {
@@ -12,6 +13,9 @@ const styles = {
 	font: "22px",
 	height: 50
   },
+  user: {
+
+  }
 }
 
 export default class extends Tab {
@@ -21,7 +25,7 @@ export default class extends Tab {
 	  description: 'Login to proceed',
 	  background:BACKGROUND
 	});
-	let email,password, loading, signInForm, profile;
+	let email,password, loading, signInForm, profile, profileAvatar,profileEmail;
 	this.append(
 	  signInForm = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL }).append(
 		email = new TextInput({...styles.textField, keyboard: `email`, message:`Email`}),
@@ -31,9 +35,11 @@ export default class extends Tab {
 		new Button("Sign up", {...STACK,height: 50}).on("tap",this.signUp.bind(this))
 	  ),
 
-	  profile = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL , background:'red',...INVISIBLE}).append(
+	  profile = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL , ...INVISIBLE}).append(
 
-		//email = new TextInput({...styles.textField, keyboard: `email`, message:`Email`}),
+
+		profileAvatar = new ImageView({ top: 40, width: 140, height: 140, centerX: 0} ),
+		profileEmail = new TextView({...STACK, text: ``})
 		//password = new TextInput({...styles.textField, type: `password`, message:`Password`}),
 		//new Composite({...STACK,height:1, background: BORDER}),
 		//new Button("Sign in", {...STACK,height: 50}).on("tap",this.signIn.bind(this)),
@@ -44,7 +50,7 @@ export default class extends Tab {
 	);
 	this.set({
 	  _elements:{
-		email,password, signInForm, loading, profile
+		email,password, signInForm, loading, profile, profileAvatar,profileEmail
 	  }
 	});
   }
@@ -55,6 +61,8 @@ export default class extends Tab {
 	  .then(response => {
 		console.log("SUCCESS LOGGING IN USER");
 		console.log(response);
+		this.set({_user:response});
+		this.isLoggedIn();
 	  })
 	  .catch(err => {
 		console.log("FAIL");
@@ -68,7 +76,8 @@ export default class extends Tab {
 	registerUser(_elements.email.get('text'),_elements.password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS REGISTERING USER");
-		console.log(response);
+		//console.log(response);
+		this.signIn();
 	  })
 	  .catch(err => {
 		console.log("FAIL");
@@ -82,10 +91,14 @@ export default class extends Tab {
 	_elements.signInForm.set(INVISIBLE);
 	_elements.profile.set(INVISIBLE);
 	_elements.loading.set(VISIBLE);
-	//_elements.submitImage.animate(HIDE, {
-	//  duration: 400,
-	//  easing: "ease-in-out",
-	//});
-
+  }
+  isLoggedIn(){
+	let _elements =  this.get('_elements');
+	let _user = this.get('_user');
+	_elements.signInForm.set(INVISIBLE);
+	_elements.profile.set(VISIBLE);
+	_elements.loading.set(INVISIBLE);
+	_elements.profileAvatar.set({image:{src:Gravatar(_user.email)}})
+	_elements.profileEmail.set({text:_user.email})
   }
 }
