@@ -52,8 +52,8 @@ function Post(args) {
   this.___class = 'Post';
   this.image = args.image || "";
   this.title = args.title || "";
-  if(args.creatorEmail){
-    this.creatorEmail = args.creatorEmail;
+  if(args.creator){
+    this.creator = args.creator;
   }
 }
 const PostsStore = Backendless.Persistence.of(Post);
@@ -62,14 +62,14 @@ export function savePost(postConfig){
   return Backendless.UserService.getCurrentUser().then(user=> {
     let config = {...postConfig};
     if(user && user.email){
-      config.creatorEmail = user.email;
+      config.creator = user;
     }
     return PostsStore.save( new Post(config) );
   }).catch(console.log);
 }
 
 var query = new Backendless.DataQuery();
-query.options = {relations:[],pageSize: 100};
+query.options = {relations:['creator'],pageSize: 100};
 
 export function getPosts(){
   return PostsStore.find(query);
