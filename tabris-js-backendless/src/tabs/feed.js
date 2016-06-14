@@ -18,7 +18,7 @@ export default class extends Tab {
 	  _e.postsCollectionView = new CollectionView({
 		...FULL,
 		items:[],
-		itemHeight: 300,
+		itemHeight: 360,
 		columnCount: COLUMN_COUNT,
 		refreshEnabled: true,
 		initializeCell: (cell) => {

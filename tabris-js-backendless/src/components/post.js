@@ -2,6 +2,7 @@ import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView} from 'tabris';
 import {FULL} from './../styles/layouts';
 
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
+import Avatar from './avatar';
 
 
 const postLayout = {
@@ -33,8 +34,10 @@ export default class extends Composite {
 		new Composite(postLayout.canvas).append(
 
 		  // Actual Content goes here !
-		  _elements.title = new TextView({top: 0, height: 40, left: 60, right: 10}),
-		  _elements.image = new ImageView({...FULL, top:40, bottom: 15})
+		  _elements.avatar = new Avatar(null,{top: 10, height: 40, left: 10, width: 40}),
+		  _elements.creator = new TextView({top: 10, height: 40, left: 60, right: 10}),
+		  _elements.title = new TextView({bottom: 10, height: 40, left: 10, right: 10}),
+		  _elements.image = new ImageView({...FULL, top:60, bottom: 60})
 
 		)
 	  )
@@ -47,8 +50,11 @@ export default class extends Composite {
 
   updateElements(item){
 	let _elements = this.get('_elements');
+	_elements.creator.set({text: item.creatorEmail ? item.creatorEmail.split('@')[0]: 'Anonymous'});
 	_elements.title.set({text:item.title});
+
 	updateImage(_elements.image,item.image);
+	_elements.avatar.setEmail(item.creatorEmail);
   }
 }
 

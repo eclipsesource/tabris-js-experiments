@@ -5,7 +5,7 @@ import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE}
 import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
 import Button from './../components/button';
 import Gravatar from './../services/Gravatar';
-
+import {setPageTitle} from './../services/Navigation';
 
 const styles = {
   textField : {
@@ -98,7 +98,8 @@ export default class extends Tab {
 	_elements.signInForm.set(INVISIBLE);
 	_elements.profile.set(VISIBLE);
 	_elements.loading.set(INVISIBLE);
-	_elements.profileAvatar.set({image:{src:Gravatar(_user.email)}})
-	_elements.profileEmail.set({text:_user.email})
+	_elements.profileAvatar.set({image:{src:Gravatar(_user.email)}});
+	_elements.profileEmail.set({text:_user.email});
+	setPageTitle(`Hi ${_user.email.split('@')[0]}`);
   }
 }
