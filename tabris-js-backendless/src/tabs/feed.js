@@ -3,13 +3,16 @@ import {getPosts} from './../services/BackendLess';
 import {FULL , COLUMN_COUNT} from './../styles/layouts';
 import PostView from './../components/post';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
+import {getIconSrc} from './../styles/icons';
+
 
 export default class extends Tab {
   constructor() {
 	super({
 	  title: 'Feed',
 	  description: 'Recent Posts Feed',
-	  background:BACKGROUND
+	  background:BACKGROUND,
+	  image: getIconSrc('home')
 	});
 	this.refreshItems = this.refreshItems.bind(this);
 	let _e = {};

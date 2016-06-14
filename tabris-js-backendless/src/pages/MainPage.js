@@ -16,7 +16,7 @@ import {registerNavigation} from './../services/Navigation';
 const mainLayout = {
   page : {
     topLevel: true,
-    title: 'Backendless Connector',
+    title: 'Recent Posts Feed',
     background:BACKGROUND
   },
   navigation : {

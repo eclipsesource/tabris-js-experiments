@@ -6,6 +6,8 @@ import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
 import Button from './../components/button';
 import Gravatar from './../services/Gravatar';
 import {setPageTitle} from './../services/Navigation';
+import {getIconSrc} from './../styles/icons';
+
 
 const styles = {
   textField : {
@@ -23,7 +25,8 @@ export default class extends Tab {
 	super({
 	  title: 'Profile',
 	  description: 'Login to proceed',
-	  background:BACKGROUND
+	  background:BACKGROUND,
+	  image: getIconSrc('more')
 	});
 	let email,password, loading, signInForm, profile, profileAvatar,profileEmail;
 	this.append(
