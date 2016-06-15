@@ -20,6 +20,10 @@ export function login(email,password){
 }
 
 
+export function logout(){
+  return Backendless.UserService.logout();
+}
+
 
 export function saveFile(fileContent){
   /****************

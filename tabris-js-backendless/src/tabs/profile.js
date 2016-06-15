@@ -1,5 +1,5 @@
 import {Page, TextInput, TabFolder, ActivityIndicator, Composite, Tab, ui,TextView, ImageView, ScrollView} from 'tabris';
-import {registerUser, login} from './../services/BackendLess';
+import {registerUser, login, logout} from './../services/BackendLess';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
@@ -17,6 +17,15 @@ const styles = {
   },
   user: {
 
+  },
+  button: {
+	...STACK,
+	height: 50
+  },
+  spacer: {
+	...STACK,
+	height: 1,
+	background: BORDER
   }
 }
 
@@ -33,20 +42,19 @@ export default class extends Tab {
 	  signInForm = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL }).append(
 		email = new TextInput({...styles.textField, keyboard: `email`, message:`Email`}),
 		password = new TextInput({...styles.textField, type: `password`, message:`Password`}),
-		new Composite({...STACK,height:1, background: BORDER}),
-		new Button("Sign in", {...STACK,height: 50}).on("tap",this.signIn.bind(this)),
-		new Button("Sign up", {...STACK,height: 50}).on("tap",this.signUp.bind(this))
+		new Composite(styles.spacer),
+		new Button("Sign in", styles.button).on("tap",this.signIn.bind(this)),
+		new Button("Sign up", styles.button).on("tap",this.signUp.bind(this))
 	  ),
 
 	  profile = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL , ...INVISIBLE}).append(
-
 
 		profileAvatar = new ImageView({ top: 40, width: 140, height: 140, centerX: 0} ),
 		profileEmail = new TextView({...STACK, alignment:'center', textColor: '#aaa', text: ``}),
 		new TextView({...STACK, alignment:'center', font: "18px", text: `Your Name:`}),
 		nameInput = new TextInput({...styles.textField, message:`Your name here...`}),
-		//new Composite({...STACK,height:1, background: BORDER}),
-		new Button("Sign Out", {...STACK,top:["prev()",40], height: 50}).on("tap",this.signIn.bind(this))
+		new Composite(styles.spacer),
+		new Button("Sign Out", {...styles.button,top:["prev()",40]}).on("tap",this.signOut.bind(this))
 	  ),
 
 	  loading = new ActivityIndicator({...CENTER, ...INVISIBLE})
@@ -63,13 +71,11 @@ export default class extends Tab {
 	login(_elements.email.get('text'),_elements.password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS LOGGING IN USER");
-		console.log(response);
 		this.set({_user:response});
 		this.isLoggedIn();
 	  })
 	  .catch(err => {
-		console.log("FAIL");
-		console.log(err);
+		this.failedAuth(err, 'Sign in');
 	  });
   }
 
@@ -79,11 +85,39 @@ export default class extends Tab {
 	registerUser(_elements.email.get('text'),_elements.password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS REGISTERING USER");
-		//console.log(response);
 		this.signIn();
 	  })
 	  .catch(err => {
-		console.log("FAIL");
+		this.failedAuth(err, 'Sign up');
+	  });
+  }
+
+  failedAuth(err, type){
+	console.warn("FAILED TO "+type.toUpperCase());
+	let errorMsg;
+	errorMsg = err.message || err.toString()
+	navigator.notification.alert(
+	  errorMsg, // message
+	  () => {}, // callback
+	  "Failed to "+type, // title
+	  "OK" // buttonName
+	);
+	this.isLoggedOut();
+  }
+
+  signOut(){
+	let _elements = this.get('_elements');
+	_elements.email.set('text','');
+	_elements.password.set('text','');
+	this.submitFormLoading();
+	logout()
+	  .then(response => {
+		console.log("SUCCESS LOGGING OUT");
+		this.set({_user:null});
+		this.isLoggedOut();
+	  })
+	  .catch(err => {
+		console.log("FAILED LOGGING OUT");
 		console.log(err);
 	  });
 
@@ -94,6 +128,12 @@ export default class extends Tab {
 	_elements.signInForm.set(INVISIBLE);
 	_elements.profile.set(INVISIBLE);
 	_elements.loading.set(VISIBLE);
+  }
+  isLoggedOut(){
+	let _elements =  this.get('_elements');
+	_elements.signInForm.set(VISIBLE);
+	_elements.profile.set(INVISIBLE);
+	_elements.loading.set(INVISIBLE);
   }
   isLoggedIn(){
 	let _elements =  this.get('_elements');
