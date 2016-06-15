@@ -1,4 +1,8 @@
 'use strict';
+/*******************
+ * Setup Backendless
+ */
+
 const Backendless = require('backendless');
 const APPLICATION_ID = '20B6BCEC-3854-082A-FFEB-62B6E777F500',
   SECRET_KEY = '13731232-AB6B-639F-FF0A-213A0E8B2700',
@@ -6,6 +10,10 @@ const APPLICATION_ID = '20B6BCEC-3854-082A-FFEB-62B6E777F500',
 
 Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
 Backendless.enablePromises();
+
+/*******************
+ * User authenticaion + profile
+ */
 
 export function registerUser(email,password){
   let user = new Backendless.User();
@@ -24,6 +32,11 @@ export function logout(){
   return Backendless.UserService.logout();
 }
 
+
+
+/*******************
+ * Saving Images
+ */
 
 export function saveFile(fileContent){
   /****************
@@ -50,7 +63,9 @@ export function saveFile(fileContent){
   });
 }
 
-
+/*******************
+ * Post CRUD - or CR for this app :)
+ */
 
 function Post(args) {
   args = args || {};
@@ -58,6 +73,7 @@ function Post(args) {
   this.image = args.image || "";
   this.title = args.title || "";
   if(args.creator){
+    // Images without a creator are considered anonymous
     this.creator = args.creator;
   }
 }
@@ -65,7 +81,7 @@ const PostsStore = Backendless.Persistence.of(Post);
 
 export function savePost(postConfig){
   return Backendless.UserService.getCurrentUser().then(user=> {
-    let config = {...postConfig};
+    let config = {...postConfig}; //Clone to prevent mutation
     if(user && user.email){
       config.creator = user;
     }
@@ -73,14 +89,8 @@ export function savePost(postConfig){
   }).catch(console.log);
 }
 
-var query = new Backendless.DataQuery();
-query.options = {relations:['creator'],pageSize: 100};
-
-export function getPosts(){
-  return PostsStore.find(query);
-}
-
 export function savePostWithImage(postConfig){
+  // Utility function to make the client api more convenient
   return saveFile(postConfig.imageData)
       .then(newImageUrl => {
         return savePost({
@@ -90,6 +100,17 @@ export function savePostWithImage(postConfig){
         });
       });
 }
+
+
+export function getPosts(){
+  let query = new Backendless.DataQuery();
+  query.options = {relations:['creator'],pageSize: 100};
+  return PostsStore.find(query);
+}
+
+/*******************
+ * TODO: Realtime updates
+ */
 
 //var channel = "TestChannel",
 //  message = "Hello22, world!";
