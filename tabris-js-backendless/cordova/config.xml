@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="9" id="com.eclipsesource.tabrisrss" version="1.1.7" xmlns="http://www.w3.org/ns/widgets">
-    <name>Tabris.js RSS reader</name>
+<widget android-versionCode="1" id="com.eclipsesource.tabrisbackendless" version="1.0.1" xmlns="http://www.w3.org/ns/widgets">
+    <name>Tabris.js Backendless</name>
     <description>
-        An exemplary Tabris.js Rss reader.
+        An exemplary Tabris.js Backendless integration.
     </description>
     <author email="tabris@eclipsesource.com" href="https://tabrisjs.com">
         EclipseSource
     </author>
     <access origin="*" />
 
-    <plugin name="cordova-plugin-x-socialsharing" />
-    <plugin name="cordova-plugin-actionsheet" />
+    <plugin name="cordova-plugin-camera" />
+    <plugin name="cordova-plugin-dialogs" />
 
     <platform name="android">
         <icon src="res/android/mipmap-ldpi/ic_launcher.png" density="ldpi" />
