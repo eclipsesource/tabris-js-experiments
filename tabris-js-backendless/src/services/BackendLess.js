@@ -32,7 +32,16 @@ export function logout(){
   return Backendless.UserService.logout();
 }
 
+export function updateUserProfile(data){
+  return Backendless.UserService.getCurrentUser().then(user=> {
+    return Backendless.UserService.update({
+      ...data,
+      ___class: 'Users',
+      objectId: user.objectId
+    });
+  });
 
+}
 
 /*******************
  * Saving Images
@@ -70,8 +79,8 @@ export function saveFile(fileContent){
 function Post(args) {
   args = args || {};
   this.___class = 'Post';
-  this.image = args.image || "";
-  this.title = args.title || "";
+  this.image = args.image || '';
+  this.title = args.title || '';
   if(args.creator){
     // Images without a creator are considered anonymous
     this.creator = args.creator;
@@ -83,10 +92,11 @@ export function savePost(postConfig){
   return Backendless.UserService.getCurrentUser().then(user=> {
     let config = {...postConfig}; //Clone to prevent mutation
     if(user && user.email){
+      user.___class = 'Users';
       config.creator = user;
     }
     return PostsStore.save( new Post(config) );
-  }).catch(console.log);
+  });
 }
 
 export function savePostWithImage(postConfig){

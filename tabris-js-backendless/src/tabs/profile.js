@@ -1,11 +1,10 @@
 import {Page, TextInput, TabFolder, ActivityIndicator, Composite, Tab, ui,TextView, ImageView, ScrollView} from 'tabris';
-import {registerUser, login, logout} from './../services/BackendLess';
+import {registerUser, login, logout, updateUserProfile} from './../services/BackendLess';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
 import Button from './../components/button';
 import Gravatar from './../services/Gravatar';
-import {setPageTitle} from './../services/Navigation';
 import {getIconSrc} from './../styles/icons';
 
 
@@ -33,7 +32,7 @@ export default class extends Tab {
   constructor() {
 	super({
 	  title: 'Profile',
-	  description: 'Login to proceed',
+	  description: 'User Profile',
 	  background:BACKGROUND,
 	  image: getIconSrc('more')
 	});
@@ -124,6 +123,15 @@ export default class extends Tab {
 
   nameChanged(widget, newName){
 	console.log(newName);
+	updateUserProfile({name:newName})
+	  .then(response => {
+		console.log("SUCCESS UPDATING NAME");
+		console.log(response);
+	  })
+	  .catch(err => {
+		console.log("FAILED UODATING NAME");
+		console.log(err);
+	  });;
   }
 
 
@@ -150,6 +158,5 @@ export default class extends Tab {
 	_elements.profileAvatar.set({image:{src:Gravatar(_user.email)}});
 	_elements.profileEmail.set({text:_user.email});
 	_elements.nameInput.set({text:_user.name});
-	setPageTitle(`Hi ${_user.name.split(' ')[0]}`);
   }
 }

@@ -91,20 +91,26 @@ export default class extends Page {
   }
 
   submitPost(){
-	this.submitImageLoading();
+	this.submitImageLoading(true);
 	let imageData = this.get('imageData');
 	savePostWithImage({
 	  imageData,
 	  title: this.get('_elements').postTitle.get('text'),
 	}).then(response => {
 		console.log("SAVED POST WITH IMAGE DATA");
-		//console.log(response);
 	  	this.leavePage();
 	  })
 	  .catch(err => {
 		console.log("FAILED TO SAVE POST WITH IMAGE DATA");
-		console.log(err);
-		this.leavePage();
+		let errorMsg;
+		errorMsg = err.message || err.toString()
+		navigator.notification.alert(
+		  errorMsg, // message
+		  () => {}, // callback
+		  "Failed to Submit Image", // title
+		  "OK" // buttonName
+		);
+		this.submitImageLoading(false);
 	  });
   }
 
@@ -113,18 +119,16 @@ export default class extends Page {
 	this.close();
   }
 
-  submitImageLoading(){
+  submitImageLoading(isLoading){
 	let _elements =  this.get('_elements');
-	_elements.textContainer.set(HIDE);
-	_elements.submitButton.set(HIDE);
-	_elements.loading.set(SHOW);
-	_elements.submitImage.animate(HIDE, {
+	_elements.textContainer.set(isLoading? HIDE : SHOW);
+	_elements.submitButton.set(isLoading? HIDE : SHOW);
+	_elements.loading.set(isLoading? SHOW : HIDE);
+	_elements.submitImage.animate(isLoading? HIDE : SHOW, {
 	  duration: 400,
 	  easing: "ease-in-out",
 	});
-
   }
-
 }
 
 function base64Prefix(src){
