@@ -50,7 +50,7 @@ export default class extends Composite {
 
   updateElements(item){
 	let _elements = this.get('_elements');
-	_elements.creator.set({text: item.creator ? item.creator.email.split('@')[0]: 'Anonymous'});
+	_elements.creator.set({text: item.creator ? item.creator.name : 'Anonymous'});
 	_elements.title.set({text:item.title});
 
 	updateImage(_elements.image,item.image);

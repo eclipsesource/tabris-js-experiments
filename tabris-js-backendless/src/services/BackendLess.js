@@ -11,6 +11,7 @@ export function registerUser(email,password){
   let user = new Backendless.User();
   user.email = email;
   user.password = password;
+  user.name = email.split('@')[0] || 'Anonymous';
   return Backendless.UserService.register(user);
 }
 
@@ -86,30 +87,27 @@ export function savePostWithImage(postConfig){
       });
 }
 
-
-
-
-
-
-
-
-
-
-
-//function userRegistered(user) {
-//  console.log("user has registered");
+//var channel = "TestChannel",
+//  message = "Hello22, world!";
+//
+//var response = Backendless.Messaging.publish(channel, message,null,null).then(sub =>{
+//  console.log("PUB");
+//  //console.log(sub)
+//}).catch(err => {
+//  console.error(err);
+//});
+//
+//
+//var subscriptionCallback = function (data) {
+//  var messagesArray = data["messages"];
+//  console.log(messagesArray[0].data)
+//  // process messages here
 //}
 //
-//function gotError(err) {
-//  console.log("error message - " + err.message);
-//  console.log("error code - " + err.statusCode);
-//}
-//
-//var user = new Backendless.User();
-//user.email = "backendlessdeveloper@backedless.com";
-//user.password = "password";
-//Backendless.UserService.register(user).then(userRegistered).catch(gotError);
+//var subscription = Backendless.Messaging.subscribe(channel, subscriptionCallback,null).then(sub =>{
+//  console.log("SUB");
+//  //console.log(sub);
+//}).catch(err => {
+//  console.error(err);
+//});
 
-
-
-//export default Backendless;

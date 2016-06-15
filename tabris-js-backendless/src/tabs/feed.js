@@ -46,7 +46,6 @@ export default class extends Tab {
 	  refreshIndicator: true
 	});
 	getPosts().then(results => {
-	  console.log(results.data[0]);
 	  postsCollectionView.set({
 		items: results.data,
 		refreshIndicator: false

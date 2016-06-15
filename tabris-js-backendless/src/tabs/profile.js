@@ -28,7 +28,7 @@ export default class extends Tab {
 	  background:BACKGROUND,
 	  image: getIconSrc('more')
 	});
-	let email,password, loading, signInForm, profile, profileAvatar,profileEmail;
+	let email,password, loading, signInForm, profile, profileAvatar,profileEmail, nameInput;
 	this.append(
 	  signInForm = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL }).append(
 		email = new TextInput({...styles.textField, keyboard: `email`, message:`Email`}),
@@ -42,18 +42,18 @@ export default class extends Tab {
 
 
 		profileAvatar = new ImageView({ top: 40, width: 140, height: 140, centerX: 0} ),
-		profileEmail = new TextView({...STACK, text: ``})
-		//password = new TextInput({...styles.textField, type: `password`, message:`Password`}),
+		profileEmail = new TextView({...STACK, alignment:'center', textColor: '#aaa', text: ``}),
+		new TextView({...STACK, alignment:'center', font: "18px", text: `Your Name:`}),
+		nameInput = new TextInput({...styles.textField, message:`Your name here...`}),
 		//new Composite({...STACK,height:1, background: BORDER}),
-		//new Button("Sign in", {...STACK,height: 50}).on("tap",this.signIn.bind(this)),
-		//new Button("Sign up", {...STACK,height: 50}).on("tap",this.signUp.bind(this))
+		new Button("Sign Out", {...STACK,top:["prev()",40], height: 50}).on("tap",this.signIn.bind(this))
 	  ),
 
 	  loading = new ActivityIndicator({...CENTER, ...INVISIBLE})
 	);
 	this.set({
 	  _elements:{
-		email,password, signInForm, loading, profile, profileAvatar,profileEmail
+		email,password, signInForm, loading, profile, profileAvatar,profileEmail,nameInput
 	  }
 	});
   }
@@ -103,6 +103,7 @@ export default class extends Tab {
 	_elements.loading.set(INVISIBLE);
 	_elements.profileAvatar.set({image:{src:Gravatar(_user.email)}});
 	_elements.profileEmail.set({text:_user.email});
-	setPageTitle(`Hi ${_user.email.split('@')[0]}`);
+	_elements.nameInput.set({text:_user.name});
+	setPageTitle(`Hi ${_user.name.split(' ')[0]}`);
   }
 }
