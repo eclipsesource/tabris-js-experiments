@@ -178,7 +178,13 @@ function newPostCallback(post){
   if(post.title && post.title.length>0){
     message += ` - ${post.title}`;
   }
-  window.plugins.toast.showLongBottom(message);
+  window.plugins.toast.showWithOptions(
+    {
+      message,
+      duration: 8500, // ms
+      position: "bottom",
+
+    });
 }
 
 

@@ -4,6 +4,25 @@ import {FULL} from './../styles/layouts';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 import Avatar from './avatar';
 
+import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
+
+const SharingOptions = [
+  {
+	name: 'Share',
+	handler: sharePost
+  },
+  {
+	name : 'Share via Facebook',
+	handler: sharePostViaFacebook
+  },
+  {
+	name : 'Share via Twitter',
+	handler: sharePostViaTwitter
+  }
+];
+const SharingButtons = SharingOptions.map(option => option.name);
+
+
 
 const postLayout = {
   container : {
@@ -24,10 +43,12 @@ const postLayout = {
 
 }
 
-
 export default class extends Composite {
   constructor() {
 	super(postLayout.container);
+	this.updateElements = this.updateElements.bind(this); //ES6 hack
+	this.itemOptions = this.itemOptions.bind(this);
+
 	let _elements = {};
 	this.append(
 	  new Composite(postLayout.border).append(
@@ -36,16 +57,14 @@ export default class extends Composite {
 		  // Actual Content goes here !
 		  _elements.avatar = new Avatar(null,{top: 10, height: 40, left: 10, width: 40}),
 		  _elements.creator = new TextView({top: 10, height: 40, left: 60, right: 10}),
+		  _elements.options = new TextView({top: 20, right: 20, text:'SHARE'}).on('tap', this.itemOptions),
 		  _elements.title = new TextView({bottom: 10, height: 40, left: 10, right: 10}),
 		  _elements.image = new ImageView({...FULL, top:60, bottom: 60})
 
 		)
 	  )
-
 	);
-
 	this.set({_elements});
-	this.updateElements = this.updateElements.bind(this); //ES6 hack
   }
 
   updateElements(item){
@@ -55,6 +74,27 @@ export default class extends Composite {
 
 	updateImage(_elements.image,item.image);
 	_elements.avatar.setEmail(item.creator ? item.creator.email : null);
+
+	this.set({_activeItem: item});
+  }
+
+  itemOptions(){
+	let _activeItem = this.get('_activeItem');
+	let buttonPitch = -2;
+	let options = {
+	  androidTheme: window.plugins.actionsheet.ANDROID_THEMES.THEME_HOLO_LIGHT,
+	  title: "What do you want with this image?",
+	  buttonLabels: SharingButtons,
+	  androidEnableCancelButton: true,
+	  winphoneEnableCancelButton: true,
+	  addCancelButtonWithLabel: "Cancel",
+	  addDestructiveButtonWithLabel: "Delete it" // TODO: DELETE
+	};
+	window.plugins.actionsheet.show(options, (buttonIndex)=> {
+	  	if(SharingOptions[buttonIndex+buttonPitch]){
+		  SharingOptions[buttonIndex+buttonPitch].handler(_activeItem);
+		}
+	});
   }
 }
 
