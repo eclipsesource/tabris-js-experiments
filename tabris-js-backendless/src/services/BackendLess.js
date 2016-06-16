@@ -190,7 +190,6 @@ var subscriptionCallback = function (data) {
 
 var subscription = Backendless.Messaging.subscribe(PUBSUB_CHANNEL, subscriptionCallback,null).then(sub =>{
   console.log("SUBSCRIBED TO NEW POSTS FEED");
-  //console.log(sub);
 }).catch(err => {
   console.error(err);
 });
