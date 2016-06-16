@@ -7,7 +7,8 @@ const Backendless = require('backendless');
 const APPLICATION_ID = '20B6BCEC-3854-082A-FFEB-62B6E777F500',
   SECRET_KEY = '13731232-AB6B-639F-FF0A-213A0E8B2700',
   VERSION = 'v1', //default application version;
-  PUBSUB_CHANNEL = "FEED_APP";
+  PUBSUB_CHANNEL = "FEED_APP",
+  PUBSUB_SENDER = guid();
 
 Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
 Backendless.enablePromises();
@@ -50,7 +51,6 @@ export function login(email,password){
   return Backendless.UserService.login( email, password, true);
 }
 
-
 export function logout(){
   return Backendless.UserService.logout();
 }
@@ -63,7 +63,6 @@ export function updateUserProfile(data){
       objectId: user.objectId
     });
   });
-
 }
 
 /*******************
@@ -86,7 +85,7 @@ export function saveFile(fileContent){
         }
       }
     };
-    xhr.open("PUT", `https://api.backendless.com/${VERSION}/files/binary/testFolder/${Math.floor(Math.random()*1000000000)}.jpg?overwrite=false`, true);
+    xhr.open("PUT", `https://api.backendless.com/${VERSION}/files/binary/testFolder/${guid()}.jpg?overwrite=false`, true);
     xhr.setRequestHeader("Content-type", "text/plain");
     xhr.setRequestHeader("application-id", APPLICATION_ID);
     xhr.setRequestHeader("secret-key", SECRET_KEY);
@@ -138,7 +137,6 @@ export function savePostWithImage(postConfig){
       });
 }
 
-
 export function getPosts(){
   let query = new Backendless.DataQuery();
   query.options = {relations:['creator'],pageSize: 100};
@@ -152,12 +150,16 @@ export function getPosts(){
 function PublishPostSubmission(post){
   let message = JSON.stringify({
     type: 'newPost',
-    objectId: post.objectId,
-    title: post.title,
-    creator: post.creator ? {
-      email: post.creator.email,
-      name: post.creator.name,
-    } : null
+    sender: PUBSUB_SENDER,
+    data: {
+      objectId: post.objectId,
+      title: post.title,
+      creator: post.creator ? {
+        objectId: post.creator.objectId,
+        email: post.creator.email,
+        name: post.creator.name,
+      } : null
+    }
   });
   Backendless.Messaging.publish(PUBSUB_CHANNEL, message,null,null).then(sub =>{
     console.log("PUBLISHED NEW POST");
@@ -167,11 +169,23 @@ function PublishPostSubmission(post){
 }
 
 
+function newPostCallback(post){
+  console.log("A NEW POST PUBLISHED IN THE FEED");
+  console.log(post);
+}
+
 
 var subscriptionCallback = function (data) {
   var messagesArray = data["messages"];
-  console.log(messagesArray[0].data)
-  // process messages here
+  let handler;
+  messagesArray.forEach(message => {
+    handler = JSON.parse(message.data);
+    if(handler.sender !== PUBSUB_SENDER){ // Prevent getting my own messages
+      if(handler.type === 'newPost'){
+        newPostCallback(handler.data);
+      }
+    }
+  });
 }
 
 var subscription = Backendless.Messaging.subscribe(PUBSUB_CHANNEL, subscriptionCallback,null).then(sub =>{
@@ -181,3 +195,15 @@ var subscription = Backendless.Messaging.subscribe(PUBSUB_CHANNEL, subscriptionC
   console.error(err);
 });
 
+
+
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
