@@ -6,7 +6,8 @@
 const Backendless = require('backendless');
 const APPLICATION_ID = '20B6BCEC-3854-082A-FFEB-62B6E777F500',
   SECRET_KEY = '13731232-AB6B-639F-FF0A-213A0E8B2700',
-  VERSION = 'v1'; //default application version;
+  VERSION = 'v1', //default application version;
+  PUBSUB_CHANNEL = "FEED_APP";
 
 Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
 Backendless.enablePromises();
@@ -25,7 +26,7 @@ export function getActiveUser(){
         if(isValid){
           Backendless.UserService.getCurrentUser()
           .then(user=> {
-            console.log(`Has a live session for ${user.email}`);
+            console.log(`App has a live session for user: ${user.email}`);
             resolve(user);
           })
           .catch(reject)
@@ -117,7 +118,11 @@ export function savePost(postConfig){
       user.___class = 'Users';
       config.creator = user;
     }
-    return PostsStore.save( new Post(config) );
+    return PostsStore.save( new Post(config))
+      .then(post => {
+        PublishPostSubmission(post);
+        return post;
+      });
   });
 }
 
@@ -144,15 +149,23 @@ export function getPosts(){
  * TODO: Realtime updates
  */
 
-var channel = "TestChannel",
-  message = "Hello22, world!";
+function PublishPostSubmission(post){
+  let message = JSON.stringify({
+    type: 'newPost',
+    objectId: post.objectId,
+    title: post.title,
+    creator: post.creator ? {
+      email: post.creator.email,
+      name: post.creator.name,
+    } : null
+  });
+  Backendless.Messaging.publish(PUBSUB_CHANNEL, message,null,null).then(sub =>{
+    console.log("PUBLISHED NEW POST");
+  }).catch(err => {
+    console.error(err);
+  });
+}
 
-var response = Backendless.Messaging.publish(channel, message,null,null).then(sub =>{
-  console.log("PUB");
-  //console.log(sub)
-}).catch(err => {
-  console.error(err);
-});
 
 
 var subscriptionCallback = function (data) {
@@ -161,8 +174,8 @@ var subscriptionCallback = function (data) {
   // process messages here
 }
 
-var subscription = Backendless.Messaging.subscribe(channel, subscriptionCallback,null).then(sub =>{
-  console.log("SUB");
+var subscription = Backendless.Messaging.subscribe(PUBSUB_CHANNEL, subscriptionCallback,null).then(sub =>{
+  console.log("SUBSCRIBED TO NEW POSTS FEED");
   //console.log(sub);
 }).catch(err => {
   console.error(err);

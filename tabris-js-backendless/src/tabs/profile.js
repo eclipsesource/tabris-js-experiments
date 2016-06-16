@@ -47,15 +47,20 @@ export default class extends Tab {
 	this.isLoggedOut = this.isLoggedOut.bind(this);
 	this.isLoggedIn = this.isLoggedIn.bind(this);
 	this.validateAuth = this.validateAuth.bind(this);
+	this.signIn = this.signIn.bind(this);
+	this.signUp = this.signUp.bind(this);
+	this.signOut = this.signOut.bind(this);
+	this.nameChanged = this.nameChanged.bind(this);
 
+	// Screen setup
 	let email,password, loading, signInForm, profile, profileAvatar,profileEmail, nameInput;
 	this.append(
 	  signInForm = new ScrollView(styles.container).append(
 		email = new TextInput({...styles.textField, keyboard: `email`, message:`Email`}),
 		password = new TextInput({...styles.textField, type: `password`, message:`Password`}),
 		new Composite(styles.spacer),
-		new Button("Sign in", styles.button).on("tap",this.signIn.bind(this)),
-		new Button("Sign up", styles.button).on("tap",this.signUp.bind(this))
+		new Button("Sign in", styles.button).on("tap",this.signIn),
+		new Button("Sign up", styles.button).on("tap",this.signUp)
 	  ),
 
 	  profile = new ScrollView(styles.container).append(
@@ -63,9 +68,9 @@ export default class extends Tab {
 		profileAvatar = new ImageView({ top: 40, width: 140, height: 140, centerX: 0} ),
 		profileEmail = new TextView({...STACK, alignment:'center', textColor: '#aaa', text: ``}),
 		new TextView({...STACK, alignment:'center', font: "18px", text: `Your Name:`}),
-		nameInput = new TextInput({...styles.textField, message:`Your name here...`}).on("change:text",this.nameChanged.bind(this)),
+		nameInput = new TextInput({...styles.textField, message:`Your name here...`}).on("change:text",this.nameChanged),
 		new Composite(styles.spacer),
-		new Button("Sign Out", {...styles.button,top:["prev()",40]}).on("tap",this.signOut.bind(this))
+		new Button("Sign Out", {...styles.button,top:["prev()",40]}).on("tap",this.signOut)
 	  ),
 
 	  loading = new ActivityIndicator({...CENTER, ...INVISIBLE})
@@ -83,7 +88,6 @@ export default class extends Tab {
 	this.isLoading();
 	getActiveUser()
 	  .then(user=>{
-		console.log("SHOW PROFILE");
 		this.set({_user:user});
 		if(user){
 		  this.isLoggedIn();
@@ -93,7 +97,7 @@ export default class extends Tab {
 		}
 	  })
 	  .catch(err => {
-		console.log("Something went wrong!");
+		console.error("FAILED TO GET SESSION DATA!");
 		this.isLoggedOut();
 	  })
   }
@@ -151,20 +155,18 @@ export default class extends Tab {
 	  })
 	  .catch(err => {
 		console.log("FAILED LOGGING OUT");
-		console.log(err);
+		console.error(err);
 	  });
   }
 
   nameChanged(widget, newName){
-	console.log(newName);
 	updateUserProfile({name:newName})
 	  .then(response => {
 		console.log("SUCCESS UPDATING NAME");
-		//console.log(response);
 	  })
 	  .catch(err => {
 		console.log("FAILED UPDATING NAME");
-		console.log(err);
+		console.error(err);
 	  });
   }
 

@@ -9,11 +9,8 @@ export function registerNavigation(newElements){
 	...newElements
   };
   NavigationElements.Navigation.on("change:selection", (widget, tab) => {
-      //colorUpdates (tab.get('_feed').color );
-      console.log(tab.get('title'));
+      console.log(`CHANGE TAB: ${tab.get('title')}`);
       setPageTitle(tab.get('description'));
-      //tab.set('image', getIconSrc(tab.get('_imgName') + '_full') )
-      //tab.trigger("appear",tab);
   });
 }
 
