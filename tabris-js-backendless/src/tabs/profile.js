@@ -68,7 +68,7 @@ export default class extends Tab {
 		profileAvatar = new ImageView({ top: 40, width: 140, height: 140, centerX: 0} ),
 		profileEmail = new TextView({...STACK, alignment:'center', textColor: '#aaa', text: ``}),
 		new TextView({...STACK, alignment:'center', font: "18px", text: `Your Name:`}),
-		nameInput = new TextInput({...styles.textField, message:`Your name here...`}).on("change:text",this.nameChanged),
+		nameInput = new TextInput({...styles.textField, message:`Your name here...`}).on('input',this.nameChanged),
 		new Composite(styles.spacer),
 		new Button("Sign Out", {...styles.button,top:["prev()",40]}).on("tap",this.signOut)
 	  ),
