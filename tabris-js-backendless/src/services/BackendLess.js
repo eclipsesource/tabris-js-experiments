@@ -1,4 +1,14 @@
 'use strict';
+/*************************
+ *  Why this demo app?
+ *  To Explain how easy some of the "hard" parts of building an app can be combining Tabris.js with Backendless
+ *  1. User Management - Register, Login, Persist session, Personal data, Social login (TODO)
+ *  2. Data CRUD - Create, Read, Update (TODO), Delete (TODO) assets.
+ *  3. File management - Upload images taken on the device. Scale on Server (TODO).
+ *  4. Realtime communication between clients
+ *  5. Push notifications? (TODO)
+ */
+
 /*******************
  * Setup Backendless
  */
@@ -14,7 +24,7 @@ Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
 Backendless.enablePromises();
 
 /*******************
- * User authenticaion + profile
+ * User authentication + profile
  */
 // TODO: in order to get persistent sessions, the best option is to have the SDK working with localstorage.
 // TODO: https://github.com/Backendless/JS-SDK/pull/35
@@ -183,7 +193,6 @@ function newPostCallback(post){
       message,
       duration: 8500, // ms
       position: "bottom",
-
     });
 }
 
@@ -206,8 +215,6 @@ var subscription = Backendless.Messaging.subscribe(PUBSUB_CHANNEL, subscriptionC
 }).catch(err => {
   console.error(err);
 });
-
-
 
 
 function guid() {
