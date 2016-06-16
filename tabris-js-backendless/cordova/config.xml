@@ -11,6 +11,7 @@
 
     <plugin name="cordova-plugin-camera" />
     <plugin name="cordova-plugin-dialogs" />
+    <plugin name="cordova-plugin-x-toast" />
 
     <platform name="android">
         <icon src="res/android/mipmap-ldpi/ic_launcher.png" density="ldpi" />

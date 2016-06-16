@@ -171,7 +171,14 @@ function PublishPostSubmission(post){
 
 function newPostCallback(post){
   console.log("A NEW POST PUBLISHED IN THE FEED");
-  console.log(post);
+  let message = 'A new image was posted';
+  if(post.creator && post.creator.name && post.creator.name.length>0){
+    message += ` by ${post.creator.name}`;
+  }
+  if(post.title && post.title.length>0){
+    message += ` - ${post.title}`;
+  }
+  window.plugins.toast.showLongBottom(message);
 }
 
 
