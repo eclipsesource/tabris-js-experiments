@@ -15,7 +15,8 @@ Backendless.enablePromises();
  * User authenticaion + profile
  */
 // TODO: in order to get persistent sessions, the best option is to have the SDK working with localstorage.
-
+// TODO: https://github.com/Backendless/JS-SDK/pull/35
+// TODO: https://github.com/eclipsesource/tabris-js/issues/892
 
 export function getActiveUser(){
   return new Promise(function(resolve, reject) {
@@ -35,7 +36,6 @@ export function getActiveUser(){
       }).catch(reject)
   });
 }
-
 
 export function registerUser(email,password){
   let user = new Backendless.User();
@@ -144,27 +144,27 @@ export function getPosts(){
  * TODO: Realtime updates
  */
 
-//var channel = "TestChannel",
-//  message = "Hello22, world!";
-//
-//var response = Backendless.Messaging.publish(channel, message,null,null).then(sub =>{
-//  console.log("PUB");
-//  //console.log(sub)
-//}).catch(err => {
-//  console.error(err);
-//});
-//
-//
-//var subscriptionCallback = function (data) {
-//  var messagesArray = data["messages"];
-//  console.log(messagesArray[0].data)
-//  // process messages here
-//}
-//
-//var subscription = Backendless.Messaging.subscribe(channel, subscriptionCallback,null).then(sub =>{
-//  console.log("SUB");
-//  //console.log(sub);
-//}).catch(err => {
-//  console.error(err);
-//});
+var channel = "TestChannel",
+  message = "Hello22, world!";
+
+var response = Backendless.Messaging.publish(channel, message,null,null).then(sub =>{
+  console.log("PUB");
+  //console.log(sub)
+}).catch(err => {
+  console.error(err);
+});
+
+
+var subscriptionCallback = function (data) {
+  var messagesArray = data["messages"];
+  console.log(messagesArray[0].data)
+  // process messages here
+}
+
+var subscription = Backendless.Messaging.subscribe(channel, subscriptionCallback,null).then(sub =>{
+  console.log("SUB");
+  //console.log(sub);
+}).catch(err => {
+  console.error(err);
+});
 
