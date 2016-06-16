@@ -1,5 +1,5 @@
 import {Page, TextInput, TabFolder, ActivityIndicator, Composite, Tab, ui,TextView, ImageView, ScrollView} from 'tabris';
-import {registerUser, login, logout, updateUserProfile} from './../services/BackendLess';
+import {registerUser, login, logout, updateUserProfile, getActiveUser} from './../services/BackendLess';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
@@ -9,6 +9,12 @@ import {getIconSrc} from './../styles/icons';
 
 
 const styles = {
+  container: {
+	...FULL,
+	left: MARGINXL,
+	right: MARGINXL,
+	...INVISIBLE
+  },
   textField : {
 	...STACK,
 	font: "22px",
@@ -36,9 +42,15 @@ export default class extends Tab {
 	  background:BACKGROUND,
 	  image: getIconSrc('more')
 	});
+	// ES6 bind hack
+	this.isLoading = this.isLoading.bind(this);
+	this.isLoggedOut = this.isLoggedOut.bind(this);
+	this.isLoggedIn = this.isLoggedIn.bind(this);
+	this.validateAuth = this.validateAuth.bind(this);
+
 	let email,password, loading, signInForm, profile, profileAvatar,profileEmail, nameInput;
 	this.append(
-	  signInForm = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL }).append(
+	  signInForm = new ScrollView(styles.container).append(
 		email = new TextInput({...styles.textField, keyboard: `email`, message:`Email`}),
 		password = new TextInput({...styles.textField, type: `password`, message:`Password`}),
 		new Composite(styles.spacer),
@@ -46,7 +58,7 @@ export default class extends Tab {
 		new Button("Sign up", styles.button).on("tap",this.signUp.bind(this))
 	  ),
 
-	  profile = new ScrollView({...FULL, left:MARGINXL, right:MARGINXL , ...INVISIBLE}).append(
+	  profile = new ScrollView(styles.container).append(
 
 		profileAvatar = new ImageView({ top: 40, width: 140, height: 140, centerX: 0} ),
 		profileEmail = new TextView({...STACK, alignment:'center', textColor: '#aaa', text: ``}),
@@ -63,10 +75,32 @@ export default class extends Tab {
 		email,password, signInForm, loading, profile, profileAvatar,profileEmail,nameInput
 	  }
 	});
+
+	this.validateAuth();
   }
+
+  validateAuth(){
+	this.isLoading();
+	getActiveUser()
+	  .then(user=>{
+		console.log("SHOW PROFILE");
+		this.set({_user:user});
+		if(user){
+		  this.isLoggedIn();
+		}
+		else {
+		  this.isLoggedOut();
+		}
+	  })
+	  .catch(err => {
+		console.log("Something went wrong!");
+		this.isLoggedOut();
+	  })
+  }
+
   signIn(){
 	let _elements = this.get('_elements');
-	this.submitFormLoading();
+	this.isLoading();
 	login(_elements.email.get('text'),_elements.password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS LOGGING IN USER");
@@ -80,7 +114,7 @@ export default class extends Tab {
 
   signUp(){
 	let _elements = this.get('_elements');
-	this.submitFormLoading();
+	this.isLoading();
 	registerUser(_elements.email.get('text'),_elements.password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS REGISTERING USER");
@@ -108,7 +142,7 @@ export default class extends Tab {
 	let _elements = this.get('_elements');
 	_elements.email.set('text','');
 	_elements.password.set('text','');
-	this.submitFormLoading();
+	this.isLoading();
 	logout()
 	  .then(response => {
 		console.log("SUCCESS LOGGING OUT");
@@ -126,18 +160,16 @@ export default class extends Tab {
 	updateUserProfile({name:newName})
 	  .then(response => {
 		console.log("SUCCESS UPDATING NAME");
-		console.log(response);
+		//console.log(response);
 	  })
 	  .catch(err => {
-		console.log("FAILED UODATING NAME");
+		console.log("FAILED UPDATING NAME");
 		console.log(err);
-	  });;
+	  });
   }
 
 
-
-
-  submitFormLoading(){
+  isLoading(){
 	let _elements =  this.get('_elements');
 	_elements.signInForm.set(INVISIBLE);
 	_elements.profile.set(INVISIBLE);

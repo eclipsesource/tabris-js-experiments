@@ -15,9 +15,27 @@ Backendless.enablePromises();
  * User authenticaion + profile
  */
 // TODO: in order to get persistent sessions, the best option is to have the SDK working with localstorage.
-//Backendless.UserService.isValidLogin()
-//  .then(console.log)
-//  .catch(console.error)
+
+
+export function getActiveUser(){
+  return new Promise(function(resolve, reject) {
+    Backendless.UserService.isValidLogin()
+      .then(isValid => {
+        if(isValid){
+          Backendless.UserService.getCurrentUser()
+          .then(user=> {
+            console.log(`Has a live session for ${user.email}`);
+            resolve(user);
+          })
+          .catch(reject)
+        }
+        else {
+          resolve(null);
+        }
+      }).catch(reject)
+  });
+}
+
 
 export function registerUser(email,password){
   let user = new Backendless.User();
