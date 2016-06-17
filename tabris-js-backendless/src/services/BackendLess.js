@@ -173,7 +173,9 @@ export function getPosts(){
 
 // UPDATE TODO
 export function doIOwn(postConfig){
-  return (postConfig && postConfig.creator && postConfig.creator.objectId===ACTIVE_USER);
+  if(!postConfig || !ACTIVE_USER){return false;}      // You can't delete if you are not registered
+  if(!postConfig.creator) {return true;}              // All users can delete anonymous posts
+  return (postConfig.creator.objectId===ACTIVE_USER); // Only you can delete you posts
 }
 
 // DELETE
