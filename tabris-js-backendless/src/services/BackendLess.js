@@ -5,7 +5,7 @@
  *  1. User Management - Register, Login, Persist session, Personal data, Social login (TODO)
  *  2. Data CRUD - Create, Read, Update (TODO), Delete (TODO) assets.
  *  3. File management - Upload images taken on the device. Scale on Server (TODO).
- *  4. Realtime communication between clients
+ *  4. Realtime communication between clients via Pubsub
  *  5. Push notifications? (TODO)
  */
 
@@ -26,9 +26,6 @@ Backendless.enablePromises();
 /*******************
  * User authentication + profile
  */
-// TODO: in order to get persistent sessions, the best option is to have the SDK working with localstorage.
-// TODO: https://github.com/Backendless/JS-SDK/pull/35
-// TODO: https://github.com/eclipsesource/tabris-js/issues/892
 
 export function getActiveUser(){
   return new Promise(function(resolve, reject) {

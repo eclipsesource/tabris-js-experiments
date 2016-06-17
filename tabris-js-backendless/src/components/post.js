@@ -1,6 +1,6 @@
 import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView} from 'tabris';
 import {FULL} from './../styles/layouts';
-
+import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 import Avatar from './avatar';
 
@@ -57,7 +57,9 @@ export default class extends Composite {
 		  // Actual Content goes here !
 		  _elements.avatar = new Avatar(null,{top: 10, height: 40, left: 10, width: 40}),
 		  _elements.creator = new TextView({top: 10, height: 40, left: 60, right: 10}),
-		  _elements.options = new TextView({top: 20, right: 20, text:'SHARE'}).on('tap', this.itemOptions),
+		  new Composite({top: 10, right: 10, height: 40, width: 40, highlightOnTouch:true}).append (
+			_elements.options = new ImageView({top: 5, right: 5, height: 20, width: 20 , image: getIconSrc('menu_small')})
+		  ).on('tap', this.itemOptions),
 		  _elements.title = new TextView({bottom: 10, height: 40, left: 10, right: 10}),
 		  _elements.image = new ImageView({...FULL, top:60, bottom: 60})
 
@@ -79,11 +81,13 @@ export default class extends Composite {
   }
 
   itemOptions(){
-	let _activeItem = this.get('_activeItem');
+	let _activeItem = this.get('_activeItem'),
+	  title = (_activeItem.title && _activeItem.title.length>0) ? `'${_activeItem.title}'`:'this image',
+	  byText = _activeItem.creator ? ' by ' + _activeItem.creator.name : '';
 	let buttonPitch = -2;
 	let options = {
 	  androidTheme: window.plugins.actionsheet.ANDROID_THEMES.THEME_HOLO_LIGHT,
-	  title: "What do you want with this image?",
+	  title: `What do you want with ${title+byText}?`,
 	  buttonLabels: SharingButtons,
 	  androidEnableCancelButton: true,
 	  winphoneEnableCancelButton: true,
