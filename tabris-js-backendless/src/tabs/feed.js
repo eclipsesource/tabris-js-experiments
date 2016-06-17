@@ -15,6 +15,8 @@ export default class extends Tab {
 	  image: getIconSrc('home')
 	});
 	this.refreshItems = this.refreshItems.bind(this);
+	this.onDeletedItem = this.onDeletedItem.bind(this);
+
 	let _e = {};
 
 	this.append(
@@ -32,6 +34,8 @@ export default class extends Tab {
 		  cell.on("change:item", (widget, item) => {
 			post.updateElements(item);
 		  });
+
+		  post.on('deleted',this.onDeletedItem);
 		}
 	  })
 	  .on('refresh', this.refreshItems)
@@ -46,6 +50,7 @@ export default class extends Tab {
 	  refreshIndicator: true
 	});
 	getPosts().then(results => {
+	  this.set({_items:results.data});
 	  postsCollectionView.set({
 		items: results.data,
 		refreshIndicator: false
@@ -57,4 +62,15 @@ export default class extends Tab {
 	});
 
   }
+
+  onDeletedItem(item){
+	let postsCollectionView = this.get('_e').postsCollectionView;
+	let _items = this.get('_items');
+	_items.splice(_items.indexOf(item),1);
+	this.set({_items:_items});
+	postsCollectionView.set({
+	  items: _items
+	});
+  }
+
 }

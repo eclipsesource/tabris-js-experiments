@@ -89,6 +89,7 @@ export default class extends Composite {
 	  byText = _activeItem.creator ? ' by ' + (isMine ? 'You' : _activeItem.creator.name) : '',
 	  question = `What do you want with ${title+byText}?`;
 
+
 	ActionSheet({
 	  title: question,
 	  deleteText: isMine ? 'Delete post' : null,
@@ -103,6 +104,7 @@ export default class extends Composite {
 	  deletePost(_activeItem)
 		.then(res => {
 		  console.log("DELETED THIS POST");
+		  this.trigger('deleted',_activeItem);
 		})
 		.catch(err => {
 		  console.log("FAILED DELETING THIS POST");
