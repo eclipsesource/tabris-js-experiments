@@ -3,6 +3,8 @@ import {FULL} from './../styles/layouts';
 import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 import Avatar from './avatar';
+import ActionSheet from './../components/actionsheet';
+
 
 import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
 
@@ -83,22 +85,20 @@ export default class extends Composite {
   itemOptions(){
 	let _activeItem = this.get('_activeItem'),
 	  title = (_activeItem.title && _activeItem.title.length>0) ? `'${_activeItem.title}'`:'this image',
-	  byText = _activeItem.creator ? ' by ' + _activeItem.creator.name : '';
-	let buttonPitch = -2;
-	let options = {
-	  androidTheme: window.plugins.actionsheet.ANDROID_THEMES.THEME_HOLO_LIGHT,
-	  title: `What do you want with ${title+byText}?`,
-	  buttonLabels: SharingButtons,
-	  androidEnableCancelButton: true,
-	  winphoneEnableCancelButton: true,
-	  addCancelButtonWithLabel: "Cancel",
-	  addDestructiveButtonWithLabel: "Delete it" // TODO: DELETE
-	};
-	window.plugins.actionsheet.show(options, (buttonIndex)=> {
-	  	if(SharingOptions[buttonIndex+buttonPitch]){
-		  SharingOptions[buttonIndex+buttonPitch].handler(_activeItem);
-		}
+	  byText = _activeItem.creator ? ' by ' + _activeItem.creator.name : '',
+	  question = `What do you want with ${title+byText}?`;
+
+	ActionSheet({
+	  title: question,
+	  deleteText: 'Delete post',
+	  buttons: SharingButtons
+	}, buttonIndexChosen => {
+	  console.log("SELECTED: "+SharingOptions[buttonIndexChosen].name);
+	  SharingOptions[buttonIndexChosen].handler(_activeItem);
+	}, deleteCB => {
+	  console.log("DELETE THIS POST");
 	});
+
   }
 }
 
