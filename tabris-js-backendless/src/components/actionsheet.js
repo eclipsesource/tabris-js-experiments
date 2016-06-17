@@ -33,11 +33,11 @@ export default function actionSheet(params, selectedCallback, deleteCallback, ca
 
   window.plugins.actionsheet.show(options, (buttonIndex)=> {
 	buttonIndex = buttonIndex + buttonPitch;
-	if(finalParams.deleteText && buttonIndex === -1 && deleteCallback){
-	  deleteCallback();
+	if(finalParams.deleteText && buttonIndex === -1){
+	  if(deleteCallback) {deleteCallback();}
 	}
-	else if (finalParams.cancelText && buttonIndex === finalParams.buttons.length && cancelCallback){
-	  cancelCallback();
+	else if (finalParams.cancelText && buttonIndex === finalParams.buttons.length){
+	  if(cancelCallback) {cancelCallback();}
 	}
 	else {
 	  selectedCallback(buttonIndex);
