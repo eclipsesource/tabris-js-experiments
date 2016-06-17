@@ -23,6 +23,8 @@ const APPLICATION_ID = '20B6BCEC-3854-082A-FFEB-62B6E777F500',
 Backendless.initApp(APPLICATION_ID, SECRET_KEY, VERSION);
 Backendless.enablePromises();
 
+let ACTIVE_USER = null;
+
 /*******************
  * User authentication + profile
  */
@@ -35,6 +37,7 @@ export function getActiveUser(){
           Backendless.UserService.getCurrentUser()
           .then(user=> {
             console.log(`App has a live session for user: ${user.email}`);
+            ACTIVE_USER = user.objectId;
             resolve(user);
           })
           .catch(reject)
@@ -55,11 +58,19 @@ export function registerUser(email,password){
 }
 
 export function login(email,password){
-  return Backendless.UserService.login( email, password, true);
+  return Backendless.UserService.login( email, password, true)
+    .then(user => {
+      ACTIVE_USER = user.objectId;
+      return user;
+    });
 }
 
 export function logout(){
-  return Backendless.UserService.logout();
+  return Backendless.UserService.logout()
+    .then(res => {
+      ACTIVE_USER = null;
+      return res;
+    });
 }
 
 export function updateUserProfile(data){
@@ -117,6 +128,7 @@ function Post(args) {
 }
 const PostsStore = Backendless.Persistence.of(Post);
 
+// CREATE
 export function savePost(postConfig){
   return Backendless.UserService.getCurrentUser().then(user=> {
     let config = {...postConfig}; //Clone to prevent mutation
@@ -132,6 +144,7 @@ export function savePost(postConfig){
   });
 }
 
+
 export function savePostWithImage(postConfig){
   // Utility function to make the client api more convenient
   return saveFile(postConfig.imageData)
@@ -144,11 +157,27 @@ export function savePostWithImage(postConfig){
       });
 }
 
+
+// READ
 export function getPosts(){
   let query = new Backendless.DataQuery();
   query.options = {relations:['creator'],pageSize: 100};
   return PostsStore.find(query);
 }
+
+
+// UPDATE TODO
+export function doIOwn(postConfig){
+  return (postConfig && postConfig.creator && postConfig.creator.objectId===ACTIVE_USER);
+}
+
+// DELETE
+export function deletePost(postConfig){
+  return PostsStore.remove( postConfig );
+}
+
+
+
 
 /*******************
  * TODO: Realtime updates

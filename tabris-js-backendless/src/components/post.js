@@ -4,7 +4,7 @@ import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 import Avatar from './avatar';
 import ActionSheet from './../components/actionsheet';
-
+import {deletePost, doIOwn} from './../services/BackendLess';
 
 import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
 
@@ -84,22 +84,39 @@ export default class extends Composite {
 
   itemOptions(){
 	let _activeItem = this.get('_activeItem'),
+	  isMine = doIOwn(_activeItem),
 	  title = (_activeItem.title && _activeItem.title.length>0) ? `'${_activeItem.title}'`:'this image',
-	  byText = _activeItem.creator ? ' by ' + _activeItem.creator.name : '',
+	  byText = _activeItem.creator ? ' by ' + (isMine ? 'You' : _activeItem.creator.name) : '',
 	  question = `What do you want with ${title+byText}?`;
 
 	ActionSheet({
 	  title: question,
-	  deleteText: 'Delete post',
+	  deleteText: isMine ? 'Delete post' : null,
 	  buttons: SharingButtons
 	}, buttonIndexChosen => {
+
 	  console.log("SELECTED: "+SharingOptions[buttonIndexChosen].name);
 	  SharingOptions[buttonIndexChosen].handler(_activeItem);
+
 	}, deleteCB => {
-	  console.log("DELETE THIS POST");
+
+	  deletePost(_activeItem)
+		.then(res => {
+		  console.log("DELETED THIS POST");
+		})
+		.catch(err => {
+		  console.log("FAILED DELETING THIS POST");
+		  console.error(err);
+		});
+
 	});
 
+
+
+
   }
+
+
 }
 
 let updateImage = (imageView, newUrl) => {
