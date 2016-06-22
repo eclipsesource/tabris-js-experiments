@@ -45,6 +45,7 @@ const styles = {
 
 };
 
+// Page export
 export default class extends Page {
 
   constructor(imageData) {

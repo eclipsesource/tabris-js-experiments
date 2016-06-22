@@ -12,7 +12,7 @@ import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../servi
 import {updateImage} from './../utils';
 
 // Styling
-import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE} from './../styles/layouts';
+import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE, MARGIN} from './../styles/layouts';
 import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 
@@ -31,13 +31,13 @@ const SharingOptions = [
   }
 ];
 
-const postLayout = {
+const styles = {
   container : {
 	...FULL,
 	background: BACKGROUND,
   },
   border: {
-	left:5, right:10, top:10,bottom: 5,
+	left:5, right:MARGIN, top:MARGIN,bottom: 5,
 	cornerRadius:10,
 	elevation: 1,
 	background: BORDER,
@@ -50,16 +50,16 @@ const postLayout = {
 
 
   avatar: {
-	top: 10, height: 40, left: 10, width: 40
+	top: MARGIN, height: 40, left: MARGIN, width: 40
   },
   creator: {
-	top: 10, height: 40, left: 60, right: 10
+	top: MARGIN, height: 40, left: 60, right: MARGIN
   },
   optionsIcon: {
-	container: {top: 10, right: 10, height: 40, width: 40, highlightOnTouch:true},
+	container: {top: MARGIN, right: MARGIN, height: 40, width: 40, highlightOnTouch:true},
 	image: {top: 5, right: 5, height: 20, width: 20 , image: getIconSrc('menu_small')}
   },
-  title : {bottom: 10, height: 40, left: 10, right: 10},
+  title : {bottom: MARGIN, height: 40, left: MARGIN, right: MARGIN},
   image: {...FULL, top:60, bottom: 60},
 
   loading: {...CENTER, ...INVISIBLE}
@@ -68,32 +68,40 @@ const postLayout = {
 
 // Component export
 export default class extends Composite {
+
   constructor() {
-	super(postLayout.container);
-	this.updateElements = this.updateElements.bind(this); //ES6 hack
+	// Init Container
+	super(styles.container);
+
+	// Bind internal functions
+	this.updateElements = this.updateElements.bind(this);
 	this.itemOptions = this.itemOptions.bind(this);
 	this.deletePost = this.deletePost.bind(this);
 	this.updateTitle = this.updateTitle.bind(this);
 
+	// Init Elements
 	let _e = {};
+
+	// Append The UI Elements (CollectionView)
 	this.append(
-	  new Composite(postLayout.border).append(
-		new Composite(postLayout.canvas).append(
+	  new Composite(styles.border).append(
+		new Composite(styles.canvas).append(
 		  _e.postContent = new Composite(FULL).append(
 			// Actual Content goes here !
-			_e.avatar = new Avatar(null,postLayout.avatar),
-			_e.creator = new TextView(postLayout.creator),
-			new Composite(postLayout.optionsIcon.container).append (
-			  _e.options = new ImageView(postLayout.optionsIcon.image)
+			_e.avatar = new Avatar(null,styles.avatar),
+			_e.creator = new TextView(styles.creator),
+			new Composite(styles.optionsIcon.container).append (
+			  _e.options = new ImageView(styles.optionsIcon.image)
 			).on('tap', this.itemOptions),
-			_e.title = new TextView(postLayout.title),
-			_e.image = new ImageView(postLayout.image)
+			_e.title = new TextView(styles.title),
+			_e.image = new ImageView(styles.image)
 		  ),
 
-		  _e.loading = new ActivityIndicator(postLayout.loading)
+		  _e.loading = new ActivityIndicator(styles.loading)
 		)
 	  )
 	);
+	// Set local elements
 	this.set({_e});
   }
 
@@ -103,9 +111,8 @@ export default class extends Composite {
 	_e.creator.set({text: item.creator ? item.creator.name : 'Anonymous'});
 	_e.title.set({text:item.title});
 	_e.loading.set(INVISIBLE);
-	updateImage(_e.image,item.image);
 	_e.avatar.setEmail(item.creator ? item.creator.email : null);
-
+	updateImage(_e.image,item.image);
 	this.set({_activeItem: item});
   }
 
@@ -183,4 +190,3 @@ export default class extends Composite {
 	});
   }
 }
-

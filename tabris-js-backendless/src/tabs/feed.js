@@ -1,12 +1,18 @@
+// Tabis.js Components
 import {Tab, CollectionView} from 'tabris';
+
+// Custom components
 import {Post} from './../components';
 
+// Services
+import {getPosts} from './../services/Posts';
+
+// Styling
 import {FULL , COLUMN_COUNT} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 import {getIconSrc} from './../styles/icons';
 
-import {getPosts} from './../services/Posts';
-
+// Tab export
 export default class extends Tab {
   constructor() {
 	// Init Tab
