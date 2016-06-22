@@ -1,13 +1,18 @@
+// Tabis Components
 import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView, ActivityIndicator} from 'tabris';
 
+// Styling
 import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE} from './../styles/layouts';
 import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 
+// Custom components
 import {ActionSheet, Prompt, Avatar} from './../components';
 
+// Services
 import {deletePost, updatePostTitle, doIOwn} from './../services/BackendLess';
 import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
+
 
 const SharingOptions = [
   {

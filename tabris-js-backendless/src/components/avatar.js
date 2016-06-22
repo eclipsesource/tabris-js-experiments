@@ -13,8 +13,7 @@ export default class extends ImageView {
 
   setEmail(newEmail){
 	if(!newEmail) { newEmail = 'NoGravatar'; }
-	this.set({image : {src:Gravatar(newEmail)}})
-
+	this.set({image : {src:Gravatar(newEmail)}});
   }
 }
 

@@ -1,23 +1,20 @@
 import {Page, TextInput, ImageView , ActivityIndicator, Composite} from 'tabris';
-import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED} from './../styles/layouts';
+import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED , PHOTO_SUBMIT_TEXT_HEIGHT} from './../styles/layouts';
 import {savePostWithImage} from './../services/BackendLess';
 import {backToFeed} from './../services/Navigation';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
-import Button from './../components/button';
 
-const Platform = tabris.device.get("platform").toLowerCase();
-const isIOS = Platform.toLowerCase() === 'ios';
-
-const TextContainerHeight = isIOS ? 60: 80;
+// Custom components
+import {Button} from './../components';
 
 const submitLayouts = {
   newImage: {
 	...FULL,
-	bottom: TextContainerHeight,
+	bottom: PHOTO_SUBMIT_TEXT_HEIGHT,
 	scaleMode: `fit`,
   },
   textContainer: {
-	left:0,right:0,bottom:0,height:TextContainerHeight,
+	left:0,right:0,bottom:0,height:PHOTO_SUBMIT_TEXT_HEIGHT,
 	elevation:8,
 	background:'#eee'
   },
