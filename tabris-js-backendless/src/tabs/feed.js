@@ -1,24 +1,31 @@
-import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView, CollectionView} from 'tabris';
-import {getPosts} from './../services/BackendLess';
+import {Tab, CollectionView} from 'tabris';
+
+import {Post} from './../components';
+
 import {FULL , COLUMN_COUNT} from './../styles/layouts';
-import PostView from './../components/post';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 import {getIconSrc} from './../styles/icons';
 
+import {getPosts} from './../services/BackendLess';
 
 export default class extends Tab {
   constructor() {
+	// Init Tab
 	super({
 	  title: 'Feed',
 	  description: 'Recent Posts Feed',
 	  background:BACKGROUND,
 	  image: getIconSrc('home')
 	});
+
+	// Bind internal functions
 	this.refreshItems = this.refreshItems.bind(this);
 	this.onDeletedItem = this.onDeletedItem.bind(this);
 
+	// Init Elements
 	let _e = {};
 
+	// Append The CollectionView
 	this.append(
 	  _e.postsCollectionView = new CollectionView({
 		...FULL,
@@ -29,7 +36,7 @@ export default class extends Tab {
 		initializeCell: (cell) => {
 		  let post
 		  cell.append(
-			post = new PostView()
+			post = new Post()
 		  )
 		  cell.on("change:item", (widget, item) => {
 			post.updateElements(item);
@@ -40,12 +47,16 @@ export default class extends Tab {
 	  })
 	  .on('refresh', this.refreshItems)
 	);
+
+	// Set local elements
 	this.set({_e});
+
+	// Refresh the item list
 	this.refreshItems();
   }
 
   refreshItems(){
-	let postsCollectionView = this.get('_e').postsCollectionView;
+	let { postsCollectionView } = this.get('_e');
 	postsCollectionView.set({
 	  refreshIndicator: true
 	});
@@ -64,10 +75,10 @@ export default class extends Tab {
   }
 
   onDeletedItem(item){
-	let postsCollectionView = this.get('_e').postsCollectionView;
+	let {postsCollectionView} = this.get('_e');
 	let _items = this.get('_items');
 	_items.splice(_items.indexOf(item),1);
-	this.set({_items:_items});
+	this.set({_items});
 	postsCollectionView.set({
 	  items: _items
 	});
