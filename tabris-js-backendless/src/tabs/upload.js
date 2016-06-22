@@ -7,6 +7,7 @@ import Button from './../components/button';
 import {getIconSrc} from './../styles/icons';
 
 export default class extends Tab {
+  // Init Tab
   constructor() {
 	super({
 	  title: 'Upload an image',
@@ -14,20 +15,25 @@ export default class extends Tab {
 	  background:BACKGROUND,
 	  image: getIconSrc('share')
 	});
+
+	// Bind internal functions
+	this.takePhoto = this.takePhoto.bind(this);
+	this.getGalleyPhoto = this.getGalleyPhoto.bind(this);
+
+	// Append The UI Elements (Container and two buttons)
 	this.append(
 	  new Composite({centerY:0,left:0,right:0, height: 220}).append(
-		new Button("Take New Photo", {top: 10}).on("tap",this.takePhoto.bind(this)),
-		new Button("Choose From Gallery", {bottom: 10}).on("tap",this.getGalleyPhoto.bind(this))
+		new Button("Take New Photo", {top: 10}).on("tap",this.takePhoto),
+		new Button("Choose From Gallery", {bottom: 10}).on("tap",this.getGalleyPhoto)
 	  )
-
 	);
   }
   takePhoto(){
-	this.getPhoto('CAMERA')
+	this.getPhoto('CAMERA');
   }
 
   getGalleyPhoto(){
-	this.getPhoto('PHOTOLIBRARY')
+	this.getPhoto('PHOTOLIBRARY');
   }
 
   getPhoto(source){

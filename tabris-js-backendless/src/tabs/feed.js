@@ -25,7 +25,7 @@ export default class extends Tab {
 	// Init Elements
 	let _e = {};
 
-	// Append The CollectionView
+	// Append The UI Elements (CollectionView)
 	this.append(
 	  _e.postsCollectionView = new CollectionView({
 		...FULL,
