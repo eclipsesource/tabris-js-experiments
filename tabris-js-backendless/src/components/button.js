@@ -27,6 +27,7 @@ export default class extends Composite {
   constructor(text, config, textConfig) {
 	config = config || {};
 	textConfig = textConfig || {};
+
 	super({...buttonLayout.container, ...config});
 	this.append(
 	  new Composite(buttonLayout.border).append(

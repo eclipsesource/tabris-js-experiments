@@ -1,23 +1,28 @@
-import {Page, TextInput, Tab, ui,TextView, ImageView , ActivityIndicator, Composite} from 'tabris';
-import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED} from './../styles/layouts';
-import {savePostWithImage} from './../services/BackendLess';
+// Tabis.js Components
+import {Page, TextInput, ImageView , ActivityIndicator, Composite} from 'tabris';
+
+// Custom components
+import {Button} from './../components';
+
+// Services
+import {savePostWithImage} from './../services/Posts';
 import {backToFeed} from './../services/Navigation';
+
+// General Utilities
+import {base64Prefix, animateTranslationY} from './../utils';
+
+// Styling
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
-import Button from './../components/button';
+import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED , PHOTO_SUBMIT_TEXT_HEIGHT} from './../styles/layouts';
 
-const Platform = tabris.device.get("platform").toLowerCase();
-const isIOS = Platform.toLowerCase() === 'ios';
-
-const TextContainerHeight = isIOS ? 60: 80;
-
-const submitLayouts = {
+const styles = {
   newImage: {
 	...FULL,
-	bottom: TextContainerHeight,
+	bottom: PHOTO_SUBMIT_TEXT_HEIGHT,
 	scaleMode: `fit`,
   },
   textContainer: {
-	left:0,right:0,bottom:0,height:TextContainerHeight,
+	left:0,right:0,bottom:0,height:PHOTO_SUBMIT_TEXT_HEIGHT,
 	elevation:8,
 	background:'#eee'
   },
@@ -40,6 +45,7 @@ const submitLayouts = {
 
 };
 
+// Page export
 export default class extends Page {
 
   constructor(imageData) {
@@ -53,27 +59,25 @@ export default class extends Page {
 	this.append(
 
 	  submitImage = new ImageView({
-		...submitLayouts.newImage,
+		...styles.newImage,
 		image: {src: base64Prefix(imageData)}
 	  }),
 
-	  textContainer = new Composite(submitLayouts.textContainer).append(
-						new Composite(submitLayouts.inputContainer).append(
-
-			postTitle = new TextInput(submitLayouts.textInput)
-			  .on("focus",() => {
-				animatePitch(submitImage,96);
-				animatePitch(textContainer,-9);
-			  })
-			  .on("blur", () => {
-				console.log("Lost focus - Android bug");
-				animatePitch(submitImage,0);
-				animatePitch(textContainer,0);
-			  })
-
+	  textContainer = new Composite(styles.textContainer).append(
+		new Composite(styles.inputContainer).append(
+		  postTitle = new TextInput(styles.textInput)
+			.on("focus",() => {
+			  animateTranslationY(submitImage,96);
+			  animateTranslationY(textContainer,-9);
+			})
+			.on("blur", () => {
+			  console.log("Lost focus - Android bug");
+			  animateTranslationY(submitImage,0);
+			  animateTranslationY(textContainer,0);
+			})
 		),
 
-		submitButton = new Button("Submit", submitLayouts.submitButton, {font: 'bold 16px'})
+		submitButton = new Button("Submit", styles.submitButton, {font: 'bold 16px'})
 		.on('tap', () => {
 		  this.submitPost();
 		})
@@ -81,7 +85,7 @@ export default class extends Page {
 
 	  loading = new ActivityIndicator({...CENTER, ...HIDE})
 	)
-	this.set('_elements',{
+	this.set('_e',{
 	  submitImage,
 	  postTitle,
 	  submitButton,
@@ -95,7 +99,7 @@ export default class extends Page {
 	let imageData = this.get('imageData');
 	savePostWithImage({
 	  imageData,
-	  title: this.get('_elements').postTitle.get('text'),
+	  title: this.get('_e').postTitle.get('text'),
 	}).then(response => {
 		console.log("SAVED POST WITH IMAGE DATA");
 	  	this.leavePage();
@@ -120,28 +124,13 @@ export default class extends Page {
   }
 
   submitImageLoading(isLoading){
-	let _elements =  this.get('_elements');
-	_elements.textContainer.set(isLoading? HIDE : SHOW);
-	_elements.submitButton.set(isLoading? HIDE : SHOW);
-	_elements.loading.set(isLoading? SHOW : HIDE);
-	_elements.submitImage.animate(isLoading? HIDE : SHOW, {
+	let _e =  this.get('_e');
+	_e.textContainer.set(isLoading? HIDE : SHOW);
+	_e.submitButton.set(isLoading? HIDE : SHOW);
+	_e.loading.set(isLoading? SHOW : HIDE);
+	_e.submitImage.animate(isLoading? HIDE : SHOW, {
 	  duration: 400,
 	  easing: "ease-in-out",
 	});
   }
-}
-
-function base64Prefix(src){
-  return `data:image/jpeg;base64,${src}`;
-}
-
-function animatePitch(elem, trans){
-  elem.animate({
-	transform: {
-	  translationY: trans,
-	}
-  }, {
-	duration: 200,
-	easing: "ease-out",
-  });
 }

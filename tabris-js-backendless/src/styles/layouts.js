@@ -1,4 +1,8 @@
 import {device} from 'tabris';
+
+export const Platform = device.get("platform").toLowerCase();
+export const isIOS = Platform.toLowerCase() === 'ios';
+
 export const FULL = {left: 0, top: 0, right: 0, bottom: 0};
 export const STACK = {left: 0, top: ["prev()",20], right: 0};
 export const CENTER = {centerX:0,centerY:0};
@@ -13,6 +17,9 @@ export const MARGINL = MARGIN*2;
 export const MARGINXL = MARGIN*4;
 export const PADDED = {left: MARGIN, top: MARGIN, right: MARGIN, bottom: MARGIN};
 
-export const TABBAR_LOCATION = device.get('platform') === 'iOS' ? 'bottom' : 'top';
+export const TABBAR_LOCATION = isIOS ? 'bottom' : 'top';
 
 export const COLUMN_COUNT = Math.max( Math.floor(device.get('screenWidth') / 300) , 1);
+
+
+export const PHOTO_SUBMIT_TEXT_HEIGHT = isIOS ? 60: 80;

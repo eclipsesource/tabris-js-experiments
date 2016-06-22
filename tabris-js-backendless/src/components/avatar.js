@@ -1,11 +1,14 @@
+// Tabis.js Components
 import {ImageView} from 'tabris';
-import Gravatar from './../services/Gravatar';
+
+// General Utilities
+import {GravatarUrl} from './../utils';
 
 export default class extends ImageView {
   constructor(email, config) {
 	let newConfig = {...config};
 	if(email){
-	  newConfig.image = {src:Gravatar(email)};
+	  newConfig.image = {src:GravatarUrl(email)};
 	}
 	super(newConfig);
 	this.setEmail = this.setEmail.bind(this);
@@ -13,8 +16,7 @@ export default class extends ImageView {
 
   setEmail(newEmail){
 	if(!newEmail) { newEmail = 'NoGravatar'; }
-	this.set({image : {src:Gravatar(newEmail)}})
-
+	this.set({image : {src:GravatarUrl(newEmail)}});
   }
 }
 

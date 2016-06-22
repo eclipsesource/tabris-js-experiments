@@ -1,12 +1,20 @@
+// Tabis.js Components
 import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView, ActivityIndicator} from 'tabris';
-import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE} from './../styles/layouts';
+
+// Custom components
+import {ActionSheet, Prompt, Avatar} from './../components';
+
+// Services
+import {deletePost, updatePostTitle, doIOwn} from './../services/Posts';
+import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
+
+// General Utilities
+import {updateImage} from './../utils';
+
+// Styling
+import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE, MARGIN} from './../styles/layouts';
 import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
-import Avatar from './avatar';
-import ActionSheet from './../components/actionsheet';
-import {deletePost, doIOwn} from './../services/BackendLess';
-
-import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
 
 const SharingOptions = [
   {
@@ -22,17 +30,14 @@ const SharingOptions = [
 	handler: sharePostViaTwitter
   }
 ];
-const SharingButtons = SharingOptions.map(option => option.name);
 
-
-
-const postLayout = {
+const styles = {
   container : {
 	...FULL,
 	background: BACKGROUND,
   },
   border: {
-	left:5, right:10, top:10,bottom: 5,
+	left:5, right:MARGIN, top:MARGIN,bottom: 5,
 	cornerRadius:10,
 	elevation: 1,
 	background: BORDER,
@@ -41,49 +46,73 @@ const postLayout = {
 	left:1, right:1, top:1,bottom: 1,
 	cornerRadius:10,
 	background: WHITE,
-  }
+  },
 
+
+  avatar: {
+	top: MARGIN, height: 40, left: MARGIN, width: 40
+  },
+  creator: {
+	top: MARGIN, height: 40, left: 60, right: MARGIN
+  },
+  optionsIcon: {
+	container: {top: MARGIN, right: MARGIN, height: 40, width: 40, highlightOnTouch:true},
+	image: {top: 5, right: 5, height: 20, width: 20 , image: getIconSrc('menu_small')}
+  },
+  title : {bottom: MARGIN, height: 40, left: MARGIN, right: MARGIN},
+  image: {...FULL, top:60, bottom: 60},
+
+  loading: {...CENTER, ...INVISIBLE}
 }
 
+
+// Component export
 export default class extends Composite {
+
   constructor() {
-	super(postLayout.container);
-	this.updateElements = this.updateElements.bind(this); //ES6 hack
+	// Init Container
+	super(styles.container);
+
+	// Bind internal functions
+	this.updateElements = this.updateElements.bind(this);
 	this.itemOptions = this.itemOptions.bind(this);
 	this.deletePost = this.deletePost.bind(this);
+	this.updateTitle = this.updateTitle.bind(this);
 
-	let _elements = {};
+	// Init Elements
+	let _e = {};
+
+	// Append The UI Elements (CollectionView)
 	this.append(
-	  new Composite(postLayout.border).append(
-		new Composite(postLayout.canvas).append(
-		  _elements.postContent = new Composite(FULL).append(
+	  new Composite(styles.border).append(
+		new Composite(styles.canvas).append(
+		  _e.postContent = new Composite(FULL).append(
 			// Actual Content goes here !
-			_elements.avatar = new Avatar(null,{top: 10, height: 40, left: 10, width: 40}),
-			_elements.creator = new TextView({top: 10, height: 40, left: 60, right: 10}),
-			new Composite({top: 10, right: 10, height: 40, width: 40, highlightOnTouch:true}).append (
-			  _elements.options = new ImageView({top: 5, right: 5, height: 20, width: 20 , image: getIconSrc('menu_small')})
+			_e.avatar = new Avatar(null,styles.avatar),
+			_e.creator = new TextView(styles.creator),
+			new Composite(styles.optionsIcon.container).append (
+			  _e.options = new ImageView(styles.optionsIcon.image)
 			).on('tap', this.itemOptions),
-			_elements.title = new TextView({bottom: 10, height: 40, left: 10, right: 10}),
-			_elements.image = new ImageView({...FULL, top:60, bottom: 60})
+			_e.title = new TextView(styles.title),
+			_e.image = new ImageView(styles.image)
 		  ),
 
-		  _elements.loading = new ActivityIndicator({...CENTER, ...INVISIBLE})
-
+		  _e.loading = new ActivityIndicator(styles.loading)
 		)
 	  )
 	);
-	this.set({_elements});
+	// Set local elements
+	this.set({_e});
   }
 
   updateElements(item){
-	let _elements = this.get('_elements');
-	_elements.postContent.set(SHOW);
-	_elements.creator.set({text: item.creator ? item.creator.name : 'Anonymous'});
-	_elements.title.set({text:item.title});
-	_elements.loading.set(INVISIBLE);
-	updateImage(_elements.image,item.image);
-	_elements.avatar.setEmail(item.creator ? item.creator.email : null);
-
+	let _e = this.get('_e');
+	_e.postContent.set(SHOW);
+	_e.creator.set({text: item.creator ? item.creator.name : 'Anonymous'});
+	_e.title.set({text:item.title});
+	_e.loading.set(INVISIBLE);
+	_e.avatar.setEmail(item.creator ? item.creator.email : null);
+	updateImage(_e.image,item.image);
 	this.set({_activeItem: item});
   }
 
@@ -94,15 +123,23 @@ export default class extends Composite {
 	  byText = _activeItem.creator ? ' by ' + (isMine ? 'You' : _activeItem.creator.name) : '',
 	  question = `What do you want with ${title+byText}?`;
 
+	let Options =  isMine ? [
+	  {
+		name: 'Update Title',
+		handler: this.updateTitle
+	  }
+	] : [];
+	Options = Options.concat(SharingOptions);
+    let Buttons = Options.map(option => option.name);
 
 	ActionSheet({
 	  title: question,
 	  deleteText: isMine ? 'Delete post' : null,
-	  buttons: SharingButtons
+	  buttons: Buttons
 	}, buttonIndexChosen => {
 
-	  console.log("SELECTED: "+SharingOptions[buttonIndexChosen].name);
-	  SharingOptions[buttonIndexChosen].handler(_activeItem);
+	  console.log("SELECTED: "+Options[buttonIndexChosen].name);
+	  Options[buttonIndexChosen].handler(_activeItem);
 
 	}, this.deletePost);
   }
@@ -110,13 +147,12 @@ export default class extends Composite {
   deletePost() {
 	let _activeItem = this.get('_activeItem');
 	// Animate delete
-	let _elements = this.get('_elements');
-	_elements.loading.set(VISIBLE);
-	_elements.postContent.animate(HIDE, {
+	let _e = this.get('_e');
+	_e.loading.set(VISIBLE);
+	_e.postContent.animate(HIDE, {
 	  duration: 200,
 	  easing: "ease-out",
 	});
-
 
 	// Request delete
 	deletePost(_activeItem)
@@ -130,17 +166,27 @@ export default class extends Composite {
 	  });
   }
 
+  updateTitle() {
+	let _activeItem = this.get('_activeItem');
+	let _e = this.get('_e');
+	Prompt({
+	  title: 'New Title',
+	  question: 'Enter a new title for this post',
+	  confirmText: 'Save',
+	  defaultText: _activeItem.title
+	}, newTitle => {
 
-}
+	  _e.title.set({text:newTitle}); // Optimistic update of the title, before request returns :)
 
-let updateImage = (imageView, newUrl) => {
-  let existingImage = imageView.get('image');
-  if(  !(existingImage && existingImage.src === newUrl)){
-	// Image actually changed
-	imageView.set( {image: undefined});
+	  updatePostTitle(_activeItem,newTitle)
+		.then(res => {
+		  console.log("UPDATED THIS POST");
+		  this.trigger('updated',_activeItem);
+		})
+		.catch(err => {
+		  console.log("FAILED UPDATING THIS POST");
+		  console.error(err);
+		});
+	});
   }
-  setTimeout(function(){
-	imageView.set( {image: {src: newUrl}} );
-  },1);
 }
-
