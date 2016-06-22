@@ -1,13 +1,12 @@
 import {Page, TextInput, TabFolder, ActivityIndicator, Composite, Tab, ui,TextView, ImageView, ScrollView} from 'tabris';
-import {registerUser, login, logout, updateUserProfile, getActiveUser} from './../services/Auth';
+import {Button, Avatar} from './../components';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 
-import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
-import {Button} from './../components';
-import Gravatar from './../services/Gravatar';
+import {registerUser, login, logout, updateUserProfile, getActiveUser} from './../services/Auth';
+
 import {getIconSrc} from './../styles/icons';
 import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
-
+import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
 
 const styles = {
   container: {
@@ -66,7 +65,7 @@ export default class extends Tab {
 
 	  profile = new ScrollView(styles.container).append(
 
-		profileAvatar = new ImageView({ top: 40, width: 140, height: 140, centerX: 0} ),
+		profileAvatar = new Avatar(null,{ top: 40, width: 140, height: 140, centerX: 0} ),
 		profileEmail = new TextView({...STACK, alignment:'center', textColor: '#aaa', text: ``}),
 		new TextView({...STACK, alignment:'center', font: "18px", text: `Your Name:`}),
 		nameInput = new TextInput({...styles.textField, message:`Your name here...`}).on('input',this.nameChanged),
@@ -190,7 +189,7 @@ export default class extends Tab {
 	_elements.signInForm.set(INVISIBLE);
 	_elements.profile.set(VISIBLE);
 	_elements.loading.set(INVISIBLE);
-	_elements.profileAvatar.set({image:{src:Gravatar(_user.email)}});
+	_elements.profileAvatar.setEmail(_user.email);
 	_elements.profileEmail.set({text:_user.email});
 	_elements.nameInput.set({text:_user.name});
   }

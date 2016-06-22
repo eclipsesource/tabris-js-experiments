@@ -1,9 +1,9 @@
-import Backendless, {saveFile} from './BackendLess';
+import Backendless, {saveImage} from './BackendLess';
 import {getLoggedInUser} from './Auth';
 import {guid} from './../utils';
 
 /*******************
- * Post CRUD
+ * Post SCHEMA
  */
 
 function Post(args) {
@@ -18,7 +18,9 @@ function Post(args) {
 }
 const PostsStore = Backendless.Persistence.of(Post);
 
-// CREATE POST
+/*******************
+ * Post CREATE
+ */
 export function savePost(postConfig){
   return Backendless.UserService.getCurrentUser().then(user=> {
 	let config = {...postConfig}; //Clone to prevent mutation
@@ -37,7 +39,7 @@ export function savePost(postConfig){
 
 export function savePostWithImage(postConfig){
   // Utility function to make the client api more convenient
-  return saveFile(postConfig.imageData)
+  return saveImage(postConfig.imageData)
 	.then(newImageUrl => {
 	  return savePost({
 		image:newImageUrl,
@@ -47,27 +49,37 @@ export function savePostWithImage(postConfig){
 	});
 }
 
-// READ POST
+/*******************
+ * Post READ
+ */
 export function getPosts(){
   let query = new Backendless.DataQuery();
   query.options = {relations:['creator'],pageSize: 100};
   return PostsStore.find(query);
 }
 
-// UPDATE POST
+/*******************
+ * Post UPDATE
+ */
 export function updatePostTitle(postConfig, newTitle){
   postConfig.title = newTitle;
   return PostsStore.save( postConfig );
 }
 
-// DELETE POST
+/*******************
+ * Post DELETE
+ */
 export function deletePost(postConfig){
   return PostsStore.remove( postConfig );
 }
 
-// Utility function do decide if the user can rename or delete a post.
-// It's important to understand that as with any stack, these rules need to be enforced on the backend in addition to the client
-// In this case that would be definitions in Backendless.
+/*******************
+ * Utility function do decide if the user can rename or delete a post.
+ * It's important to understand that as with any stack, these rules need to be enforced on the backend in addition to the client
+ * In this case that would be definitions in Backendless.
+ */
+
+
 export function doIOwn(postConfig){
   let activeUser = getLoggedInUser();
   if(!postConfig || !activeUser){return false;}      // You can't delete if you are not registered
@@ -76,7 +88,7 @@ export function doIOwn(postConfig){
 }
 
 /*******************
- * Post Realtime Updates
+ * Post REALTIME Updates
  */
 
 const PUBSUB_CHANNEL = "FEED_APP",

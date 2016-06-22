@@ -6,10 +6,7 @@
  * - Profile
  */
 import {Page, TabFolder, Tab, ui} from 'tabris';
-
-import feedTab from './../tabs/feed';
-import uploadTab from './../tabs/upload';
-import profileTab from './../tabs/profile';
+import {feedTab, uploadTab, profileTab} from './../tabs';
 
 import {FULL, TABBAR_LOCATION} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION , NAVIGATION_COLORS} from './../styles/colors';
@@ -23,7 +20,8 @@ const mainLayout = {
     background:BACKGROUND
   },
   navigation : {
-    ...FULL, paging:true,
+    ...FULL,
+    paging:true,
     background: NAVIGATION,
     textColor: WHITE,
     elevation: 8,

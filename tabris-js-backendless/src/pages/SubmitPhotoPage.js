@@ -1,11 +1,12 @@
 import {Page, TextInput, ImageView , ActivityIndicator, Composite} from 'tabris';
-import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED , PHOTO_SUBMIT_TEXT_HEIGHT} from './../styles/layouts';
+import {Button} from './../components';
+
 import {savePostWithImage} from './../services/Posts';
 import {backToFeed} from './../services/Navigation';
-import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 
-// Custom components
-import {Button} from './../components';
+import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
+import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED , PHOTO_SUBMIT_TEXT_HEIGHT} from './../styles/layouts';
+
 
 const submitLayouts = {
   newImage: {

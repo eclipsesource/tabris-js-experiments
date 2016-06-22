@@ -1,5 +1,4 @@
 import {Tab, CollectionView} from 'tabris';
-
 import {Post} from './../components';
 
 import {FULL , COLUMN_COUNT} from './../styles/layouts';
