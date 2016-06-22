@@ -1,11 +1,12 @@
 import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView, ActivityIndicator} from 'tabris';
+
 import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE} from './../styles/layouts';
 import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
-import Avatar from './avatar';
-import ActionSheet from './../components/actionsheet';
+
+import {ActionSheet, Prompt, Avatar} from './../components';
+
 import {deletePost, updatePostTitle, doIOwn} from './../services/BackendLess';
-import {Prompt} from './../components/dialog';
 import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
 
 const SharingOptions = [

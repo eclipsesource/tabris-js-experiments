@@ -9,7 +9,7 @@ export default function actionSheet(params, selectedCallback, deleteCallback, ca
   let finalParams = {
 	...defaultParams,
 	...params
-  }
+  };
 
   let buttonPitch = -1;
   let options = {
