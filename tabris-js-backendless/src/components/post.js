@@ -22,9 +22,6 @@ const SharingOptions = [
 	handler: sharePostViaTwitter
   }
 ];
-const SharingButtons = SharingOptions.map(option => option.name);
-
-
 
 const postLayout = {
   container : {
@@ -95,17 +92,25 @@ export default class extends Composite {
 	  byText = _activeItem.creator ? ' by ' + (isMine ? 'You' : _activeItem.creator.name) : '',
 	  question = `What do you want with ${title+byText}?`;
 
+	let Options =  isMine ? [
+	  {
+		name: 'Update Title',
+		handler: this.updateTitle
+	  }
+	] : [];
+	Options = Options.concat(SharingOptions);
+    let Buttons = Options.map(option => option.name);
 
 	ActionSheet({
 	  title: question,
 	  deleteText: isMine ? 'Delete post' : null,
-	  buttons: SharingButtons
+	  buttons: Buttons
 	}, buttonIndexChosen => {
 
-	  console.log("SELECTED: "+SharingOptions[buttonIndexChosen].name);
-	  SharingOptions[buttonIndexChosen].handler(_activeItem);
+	  console.log("SELECTED: "+Options[buttonIndexChosen].name);
+	  Options[buttonIndexChosen].handler(_activeItem);
 
-	}, this.updateTitle);
+	}, this.deletePost);
   }
 
   deletePost() {
@@ -117,7 +122,6 @@ export default class extends Composite {
 	  duration: 200,
 	  easing: "ease-out",
 	});
-
 
 	// Request delete
 	deletePost(_activeItem)
@@ -133,12 +137,15 @@ export default class extends Composite {
 
   updateTitle() {
 	let _activeItem = this.get('_activeItem');
+	let _elements = this.get('_elements');
 	Prompt({
 	  title: 'New Title',
 	  question: 'Enter a new title for this post',
 	  confirmText: 'Save',
 	  defaultText: _activeItem.title
 	}, newTitle => {
+
+	  _elements.title.set({text:newTitle}); // Optimistic update of the title
 
 	  updatePostTitle(_activeItem,newTitle)
 		.then(res => {
