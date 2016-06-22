@@ -1,4 +1,4 @@
-import {Page, TextInput, Tab, ui,TextView, ImageView , ActivityIndicator, Composite} from 'tabris';
+import {Page, TextInput, ImageView , ActivityIndicator, Composite} from 'tabris';
 import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED} from './../styles/layouts';
 import {savePostWithImage} from './../services/BackendLess';
 import {backToFeed} from './../services/Navigation';
@@ -58,19 +58,17 @@ export default class extends Page {
 	  }),
 
 	  textContainer = new Composite(submitLayouts.textContainer).append(
-						new Composite(submitLayouts.inputContainer).append(
-
-			postTitle = new TextInput(submitLayouts.textInput)
-			  .on("focus",() => {
-				animatePitch(submitImage,96);
-				animatePitch(textContainer,-9);
-			  })
-			  .on("blur", () => {
-				console.log("Lost focus - Android bug");
-				animatePitch(submitImage,0);
-				animatePitch(textContainer,0);
-			  })
-
+		new Composite(submitLayouts.inputContainer).append(
+		  postTitle = new TextInput(submitLayouts.textInput)
+			.on("focus",() => {
+			  animatePitch(submitImage,96);
+			  animatePitch(textContainer,-9);
+			})
+			.on("blur", () => {
+			  console.log("Lost focus - Android bug");
+			  animatePitch(submitImage,0);
+			  animatePitch(textContainer,0);
+			})
 		),
 
 		submitButton = new Button("Submit", submitLayouts.submitButton, {font: 'bold 16px'})

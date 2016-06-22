@@ -1,17 +1,20 @@
 /**
  * The main page of the application.
+ * Bootstraps the 3 Tabs:
+ * - Feed
+ * - Upload
+ * - Profile
  */
-import {Page, TabFolder, Tab, ui,TextView, ImageView} from 'tabris';
+import {Page, TabFolder, Tab, ui} from 'tabris';
 
-import uploadTab from './../tabs/upload';
 import feedTab from './../tabs/feed';
+import uploadTab from './../tabs/upload';
 import profileTab from './../tabs/profile';
 
 import {FULL, TABBAR_LOCATION} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION , NAVIGATION_COLORS} from './../styles/colors';
 
 import {registerNavigation} from './../services/Navigation';
-
 
 const mainLayout = {
   page : {
@@ -26,11 +29,9 @@ const mainLayout = {
     elevation: 8,
     tabBarLocation: TABBAR_LOCATION
   }
-}
-
+};
 
 export default class extends Page {
-
   constructor() {
     super(mainLayout.page);
     ui.set(NAVIGATION_COLORS);
@@ -42,8 +43,6 @@ export default class extends Page {
         nav.ProfileTab = new profileTab()
       )
     );
-
     registerNavigation(nav);
   }
-
 }
