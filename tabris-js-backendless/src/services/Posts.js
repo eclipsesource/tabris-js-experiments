@@ -78,8 +78,6 @@ export function deletePost(postConfig){
  * It's important to understand that as with any stack, these rules need to be enforced on the backend in addition to the client
  * In this case that would be definitions in Backendless.
  */
-
-
 export function doIOwn(postConfig){
   let activeUser = getLoggedInUser();
   if(!postConfig || !activeUser){return false;}      // You can't delete if you are not registered

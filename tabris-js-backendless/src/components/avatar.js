@@ -1,4 +1,7 @@
+// Tabis.js Components
 import {ImageView} from 'tabris';
+
+// General Utilities
 import {GravatarUrl} from './../utils';
 
 export default class extends ImageView {

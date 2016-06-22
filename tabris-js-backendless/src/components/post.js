@@ -1,10 +1,5 @@
-// Tabis Components
+// Tabis.js Components
 import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView, ActivityIndicator} from 'tabris';
-
-// Styling
-import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE} from './../styles/layouts';
-import {getIconSrc} from './../styles/icons';
-import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 
 // Custom components
 import {ActionSheet, Prompt, Avatar} from './../components';
@@ -13,6 +8,13 @@ import {ActionSheet, Prompt, Avatar} from './../components';
 import {deletePost, updatePostTitle, doIOwn} from './../services/Posts';
 import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
 
+// General Utilities
+import {updateImage} from './../utils';
+
+// Styling
+import {FULL, HIDE, SHOW ,CENTER, INVISIBLE , VISIBLE} from './../styles/layouts';
+import {getIconSrc} from './../styles/icons';
+import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 
 const SharingOptions = [
   {
@@ -63,6 +65,8 @@ const postLayout = {
   loading: {...CENTER, ...INVISIBLE}
 }
 
+
+// Component export
 export default class extends Composite {
   constructor() {
 	super(postLayout.container);
@@ -71,36 +75,36 @@ export default class extends Composite {
 	this.deletePost = this.deletePost.bind(this);
 	this.updateTitle = this.updateTitle.bind(this);
 
-	let _elements = {};
+	let _e = {};
 	this.append(
 	  new Composite(postLayout.border).append(
 		new Composite(postLayout.canvas).append(
-		  _elements.postContent = new Composite(FULL).append(
+		  _e.postContent = new Composite(FULL).append(
 			// Actual Content goes here !
-			_elements.avatar = new Avatar(null,postLayout.avatar),
-			_elements.creator = new TextView(postLayout.creator),
+			_e.avatar = new Avatar(null,postLayout.avatar),
+			_e.creator = new TextView(postLayout.creator),
 			new Composite(postLayout.optionsIcon.container).append (
-			  _elements.options = new ImageView(postLayout.optionsIcon.image)
+			  _e.options = new ImageView(postLayout.optionsIcon.image)
 			).on('tap', this.itemOptions),
-			_elements.title = new TextView(postLayout.title),
-			_elements.image = new ImageView(postLayout.image)
+			_e.title = new TextView(postLayout.title),
+			_e.image = new ImageView(postLayout.image)
 		  ),
 
-		  _elements.loading = new ActivityIndicator(postLayout.loading)
+		  _e.loading = new ActivityIndicator(postLayout.loading)
 		)
 	  )
 	);
-	this.set({_elements});
+	this.set({_e});
   }
 
   updateElements(item){
-	let _elements = this.get('_elements');
-	_elements.postContent.set(SHOW);
-	_elements.creator.set({text: item.creator ? item.creator.name : 'Anonymous'});
-	_elements.title.set({text:item.title});
-	_elements.loading.set(INVISIBLE);
-	updateImage(_elements.image,item.image);
-	_elements.avatar.setEmail(item.creator ? item.creator.email : null);
+	let _e = this.get('_e');
+	_e.postContent.set(SHOW);
+	_e.creator.set({text: item.creator ? item.creator.name : 'Anonymous'});
+	_e.title.set({text:item.title});
+	_e.loading.set(INVISIBLE);
+	updateImage(_e.image,item.image);
+	_e.avatar.setEmail(item.creator ? item.creator.email : null);
 
 	this.set({_activeItem: item});
   }
@@ -136,9 +140,9 @@ export default class extends Composite {
   deletePost() {
 	let _activeItem = this.get('_activeItem');
 	// Animate delete
-	let _elements = this.get('_elements');
-	_elements.loading.set(VISIBLE);
-	_elements.postContent.animate(HIDE, {
+	let _e = this.get('_e');
+	_e.loading.set(VISIBLE);
+	_e.postContent.animate(HIDE, {
 	  duration: 200,
 	  easing: "ease-out",
 	});
@@ -157,7 +161,7 @@ export default class extends Composite {
 
   updateTitle() {
 	let _activeItem = this.get('_activeItem');
-	let _elements = this.get('_elements');
+	let _e = this.get('_e');
 	Prompt({
 	  title: 'New Title',
 	  question: 'Enter a new title for this post',
@@ -165,7 +169,7 @@ export default class extends Composite {
 	  defaultText: _activeItem.title
 	}, newTitle => {
 
-	  _elements.title.set({text:newTitle}); // Optimistic update of the title
+	  _e.title.set({text:newTitle}); // Optimistic update of the title, before request returns :)
 
 	  updatePostTitle(_activeItem,newTitle)
 		.then(res => {
@@ -178,16 +182,5 @@ export default class extends Composite {
 		});
 	});
   }
-}
-
-let updateImage = (imageView, newUrl) => {
-  let existingImage = imageView.get('image');
-  if(  !(existingImage && existingImage.src === newUrl)){
-	// Image actually changed
-	imageView.set( {image: undefined});
-  }
-  setTimeout(function(){
-	imageView.set( {image: {src: newUrl}} );
-  },1);
 }
 

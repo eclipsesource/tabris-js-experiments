@@ -1,3 +1,8 @@
+/***********
+ * GENERAL HELPERS
+ */
+
+
 export function guid() {
   function s4() {
 	return Math.floor((1 + Math.random()) * 0x10000)
@@ -15,4 +20,36 @@ export function MD5(s) {function L(k,d){return(k<<d)|(k>>>(32-d))}function K(G,k
 export function GravatarUrl (email, size) {
   var size = size || 140;
   return 'http://www.gravatar.com/avatar/' + MD5(email) + '?d=mm&s=' + size;
+}
+
+export function base64Prefix(src){
+  return `data:image/jpeg;base64,${src}`;
+}
+
+
+/***********
+ * UI HELPERS
+ */
+export function updateImage(imageView, newUrl) {
+  // This utility makes image transitions in the CollectionView cleaner
+  let existingImage = imageView.get('image');
+  if(  !(existingImage && existingImage.src === newUrl)){
+	// Image actually changed
+	imageView.set( {image: undefined});
+  }
+  setTimeout(function(){
+	imageView.set( {image: {src: newUrl}} );
+  },1);
+}
+
+
+export function animateTranslationY(elem, trans){
+  elem.animate({
+	transform: {
+	  translationY: trans,
+	}
+  }, {
+	duration: 200,
+	easing: "ease-out",
+  });
 }

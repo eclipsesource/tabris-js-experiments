@@ -5,15 +5,20 @@
  * - Upload
  * - Profile
  */
+// Tabis.js Components
 import {Page, TabFolder, Tab, ui} from 'tabris';
+
+// Custom components
 import {feedTab, uploadTab, profileTab} from './../tabs';
 
+// Services
+import {registerNavigation} from './../services/Navigation';
+
+// Styling
 import {FULL, TABBAR_LOCATION} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION , NAVIGATION_COLORS} from './../styles/colors';
 
-import {registerNavigation} from './../services/Navigation';
-
-const mainLayout = {
+const styles = {
   page : {
     topLevel: true,
     title: 'Recent Posts Feed',
@@ -31,11 +36,11 @@ const mainLayout = {
 
 export default class extends Page {
   constructor() {
-    super(mainLayout.page);
+    super(styles.page);
     ui.set(NAVIGATION_COLORS);
     let nav = {MainPage:this};
     this.append(
-      nav.Navigation = new TabFolder(mainLayout.navigation).append(
+      nav.Navigation = new TabFolder(styles.navigation).append(
         nav.FeedTab = new feedTab(),
         nav.UploadTab = new uploadTab(),
         nav.ProfileTab = new profileTab()
