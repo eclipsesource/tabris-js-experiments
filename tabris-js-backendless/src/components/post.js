@@ -39,8 +39,23 @@ const postLayout = {
 	left:1, right:1, top:1,bottom: 1,
 	cornerRadius:10,
 	background: WHITE,
-  }
+  },
 
+
+  avatar: {
+	top: 10, height: 40, left: 10, width: 40
+  },
+  creator: {
+	top: 10, height: 40, left: 60, right: 10
+  },
+  optionsIcon: {
+	container: {top: 10, right: 10, height: 40, width: 40, highlightOnTouch:true},
+	image: {top: 5, right: 5, height: 20, width: 20 , image: getIconSrc('menu_small')}
+  },
+  title : {bottom: 10, height: 40, left: 10, right: 10},
+  image: {...FULL, top:60, bottom: 60},
+
+  loading: {...CENTER, ...INVISIBLE}
 }
 
 export default class extends Composite {
@@ -57,17 +72,16 @@ export default class extends Composite {
 		new Composite(postLayout.canvas).append(
 		  _elements.postContent = new Composite(FULL).append(
 			// Actual Content goes here !
-			_elements.avatar = new Avatar(null,{top: 10, height: 40, left: 10, width: 40}),
-			_elements.creator = new TextView({top: 10, height: 40, left: 60, right: 10}),
-			new Composite({top: 10, right: 10, height: 40, width: 40, highlightOnTouch:true}).append (
-			  _elements.options = new ImageView({top: 5, right: 5, height: 20, width: 20 , image: getIconSrc('menu_small')})
+			_elements.avatar = new Avatar(null,postLayout.avatar),
+			_elements.creator = new TextView(postLayout.creator),
+			new Composite(postLayout.optionsIcon.container).append (
+			  _elements.options = new ImageView(postLayout.optionsIcon.image)
 			).on('tap', this.itemOptions),
-			_elements.title = new TextView({bottom: 10, height: 40, left: 10, right: 10}),
-			_elements.image = new ImageView({...FULL, top:60, bottom: 60})
+			_elements.title = new TextView(postLayout.title),
+			_elements.image = new ImageView(postLayout.image)
 		  ),
 
-		  _elements.loading = new ActivityIndicator({...CENTER, ...INVISIBLE})
-
+		  _elements.loading = new ActivityIndicator(postLayout.loading)
 		)
 	  )
 	);
