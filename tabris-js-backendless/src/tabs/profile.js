@@ -1,9 +1,14 @@
-import {Page, TextInput, TabFolder, ActivityIndicator, Composite, Tab, ui,TextView, ImageView, ScrollView} from 'tabris';
+// Tabis.js Components
+import {TextInput, ActivityIndicator, Composite, Tab, TextView, ScrollView} from 'tabris';
+
+// Custom components
 import {Button, Avatar} from './../components';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 
+// Services
 import {registerUser, login, logout, updateUserProfile, getActiveUser} from './../services/Auth';
 
+// Styling
 import {getIconSrc} from './../styles/icons';
 import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
@@ -34,15 +39,18 @@ const styles = {
   }
 }
 
+// Tab export
 export default class extends Tab {
   constructor() {
+	// Init Tab
 	super({
 	  title: 'Profile',
 	  description: 'User Profile',
 	  background:BACKGROUND,
 	  image: getIconSrc('more')
 	});
-	// ES6 bind hack
+
+	// Bind internal functions
 	this.isLoading = this.isLoading.bind(this);
 	this.isLoggedOut = this.isLoggedOut.bind(this);
 	this.isLoggedIn = this.isLoggedIn.bind(this);
@@ -52,8 +60,10 @@ export default class extends Tab {
 	this.signOut = this.signOut.bind(this);
 	this.nameChanged = this.nameChanged.bind(this);
 
-	// Screen setup
+	// Init Elements
 	let email,password, loading, signInForm, profile, profileAvatar,profileEmail, nameInput;
+
+	// Append The UI Elements (CollectionView)
 	this.append(
 	  signInForm = new ScrollView(styles.container).append(
 		email = new TextInput({...styles.textField, keyboard: `email`, message:`Email`}),
@@ -64,7 +74,6 @@ export default class extends Tab {
 	  ),
 
 	  profile = new ScrollView(styles.container).append(
-
 		profileAvatar = new Avatar(null,{ top: 40, width: 140, height: 140, centerX: 0} ),
 		profileEmail = new TextView({...STACK, alignment:'center', textColor: '#aaa', text: ``}),
 		new TextView({...STACK, alignment:'center', font: "18px", text: `Your Name:`}),
@@ -75,8 +84,10 @@ export default class extends Tab {
 
 	  loading = new ActivityIndicator({...CENTER, ...INVISIBLE})
 	);
+
+	// Set local elements
 	this.set({
-	  _elements:{
+	  _e:{
 		email,password, signInForm, loading, profile, profileAvatar,profileEmail,nameInput
 	  }
 	});
@@ -103,9 +114,9 @@ export default class extends Tab {
   }
 
   signIn(){
-	let _elements = this.get('_elements');
+	let {email, password} = this.get('_e');
 	this.isLoading();
-	login(_elements.email.get('text'),_elements.password.get('text'))
+	login(email.get('text'),password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS LOGGING IN USER");
 		this.set({_user:response});
@@ -117,9 +128,9 @@ export default class extends Tab {
   }
 
   signUp(){
-	let _elements = this.get('_elements');
+	let {email, password} = this.get('_e');
 	this.isLoading();
-	registerUser(_elements.email.get('text'),_elements.password.get('text'))
+	registerUser(email.get('text'),password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS REGISTERING USER");
 		this.signIn();
@@ -143,9 +154,9 @@ export default class extends Tab {
   }
 
   signOut(){
-	let _elements = this.get('_elements');
-	_elements.email.set('text','');
-	_elements.password.set('text','');
+	let {email, password} = this.get('_e');
+	email.set('text','');
+	password.set('text','');
 	this.isLoading();
 	logout()
 	  .then(response => {
@@ -170,27 +181,27 @@ export default class extends Tab {
 	  });
   }
 
-
   isLoading(){
-	let _elements =  this.get('_elements');
-	_elements.signInForm.set(INVISIBLE);
-	_elements.profile.set(INVISIBLE);
-	_elements.loading.set(VISIBLE);
+	let _e =  this.get('_e');
+	_e.signInForm.set(INVISIBLE);
+	_e.profile.set(INVISIBLE);
+	_e.loading.set(VISIBLE);
   }
   isLoggedOut(){
-	let _elements =  this.get('_elements');
-	_elements.signInForm.set(VISIBLE);
-	_elements.profile.set(INVISIBLE);
-	_elements.loading.set(INVISIBLE);
+	let _e =  this.get('_e');
+	_e.signInForm.set(VISIBLE);
+	_e.profile.set(INVISIBLE);
+	_e.loading.set(INVISIBLE);
   }
+
   isLoggedIn(){
-	let _elements =  this.get('_elements');
+	let _e =  this.get('_e');
 	let _user = this.get('_user');
-	_elements.signInForm.set(INVISIBLE);
-	_elements.profile.set(VISIBLE);
-	_elements.loading.set(INVISIBLE);
-	_elements.profileAvatar.setEmail(_user.email);
-	_elements.profileEmail.set({text:_user.email});
-	_elements.nameInput.set({text:_user.name});
+	_e.signInForm.set(INVISIBLE);
+	_e.profile.set(VISIBLE);
+	_e.loading.set(INVISIBLE);
+	_e.profileAvatar.setEmail(_user.email);
+	_e.profileEmail.set({text:_user.email});
+	_e.nameInput.set({text:_user.name});
   }
 }

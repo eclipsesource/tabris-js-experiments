@@ -5,7 +5,6 @@ let ACTIVE_USER = null;
 /*******************
  * User authentication + profile
  */
-
 export function getActiveUser(){
   return new Promise(function(resolve, reject) {
 	Backendless.UserService.isValidLogin()

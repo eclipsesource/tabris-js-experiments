@@ -1,13 +1,16 @@
+// Tabis.js Components
 import {Composite, Tab} from 'tabris';
 
-import SubmitPhotoPage from './../pages/SubmitPhotoPage';
-import {FULL} from './../styles/layouts';
-
+// Custom components
 import {Button} from './../components';
+import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 
+// Styling
+import {FULL} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 import {getIconSrc} from './../styles/icons';
 
+// Tab export
 export default class extends Tab {
   // Init Tab
   constructor() {
