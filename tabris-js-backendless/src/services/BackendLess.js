@@ -133,7 +133,7 @@ function Post(args) {
 }
 const PostsStore = Backendless.Persistence.of(Post);
 
-// CREATE
+// CREATE POST
 export function savePost(postConfig){
   return Backendless.UserService.getCurrentUser().then(user=> {
     let config = {...postConfig}; //Clone to prevent mutation
@@ -163,7 +163,7 @@ export function savePostWithImage(postConfig){
 }
 
 
-// READ
+// READ POST
 export function getPosts(){
   let query = new Backendless.DataQuery();
   query.options = {relations:['creator'],pageSize: 100};
@@ -171,14 +171,19 @@ export function getPosts(){
 }
 
 
-// UPDATE TODO
+// UPDATE POST TODO
 export function doIOwn(postConfig){
   if(!postConfig || !ACTIVE_USER){return false;}      // You can't delete if you are not registered
   if(!postConfig.creator) {return true;}              // All users can delete anonymous posts
   return (postConfig.creator.objectId===ACTIVE_USER); // Only you can delete you posts
 }
 
-// DELETE
+export function updatePostTitle(postConfig, newTitle){
+  postConfig.title = newTitle;
+  return PostsStore.save( postConfig );
+}
+
+// DELETE POST
 export function deletePost(postConfig){
   return PostsStore.remove( postConfig );
 }

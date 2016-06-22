@@ -4,8 +4,8 @@ import {getIconSrc} from './../styles/icons';
 import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 import Avatar from './avatar';
 import ActionSheet from './../components/actionsheet';
-import {deletePost, doIOwn} from './../services/BackendLess';
-
+import {deletePost, updatePostTitle, doIOwn} from './../services/BackendLess';
+import {Prompt} from './../components/dialog';
 import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
 
 const SharingOptions = [
@@ -51,6 +51,7 @@ export default class extends Composite {
 	this.updateElements = this.updateElements.bind(this); //ES6 hack
 	this.itemOptions = this.itemOptions.bind(this);
 	this.deletePost = this.deletePost.bind(this);
+	this.updateTitle = this.updateTitle.bind(this);
 
 	let _elements = {};
 	this.append(
@@ -104,7 +105,7 @@ export default class extends Composite {
 	  console.log("SELECTED: "+SharingOptions[buttonIndexChosen].name);
 	  SharingOptions[buttonIndexChosen].handler(_activeItem);
 
-	}, this.deletePost);
+	}, this.updateTitle);
   }
 
   deletePost() {
@@ -130,7 +131,26 @@ export default class extends Composite {
 	  });
   }
 
+  updateTitle() {
+	let _activeItem = this.get('_activeItem');
+	Prompt({
+	  title: 'New Title',
+	  question: 'Enter a new title for this post',
+	  confirmText: 'Save',
+	  defaultText: _activeItem.title
+	}, newTitle => {
 
+	  updatePostTitle(_activeItem,newTitle)
+		.then(res => {
+		  console.log("UPDATED THIS POST");
+		  this.trigger('updated',_activeItem);
+		})
+		.catch(err => {
+		  console.log("FAILED UPDATING THIS POST");
+		  console.error(err);
+		});
+	});
+  }
 }
 
 let updateImage = (imageView, newUrl) => {
