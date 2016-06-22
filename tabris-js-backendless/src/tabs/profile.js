@@ -1,11 +1,12 @@
 import {Page, TextInput, TabFolder, ActivityIndicator, Composite, Tab, ui,TextView, ImageView, ScrollView} from 'tabris';
-import {registerUser, login, logout, updateUserProfile, getActiveUser} from './../services/BackendLess';
+import {registerUser, login, logout, updateUserProfile, getActiveUser} from './../services/Auth';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
-import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
+
 import {BACKGROUND, WHITE, NAVIGATION, BORDER} from './../styles/colors';
-import Button from './../components/button';
+import {Button} from './../components';
 import Gravatar from './../services/Gravatar';
 import {getIconSrc} from './../styles/icons';
+import {FULL, STACK, PADDED, MARGINXL , CENTER, HIDE, SHOW , INVISIBLE, VISIBLE} from './../styles/layouts';
 
 
 const styles = {

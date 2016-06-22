@@ -6,7 +6,7 @@ import {FULL , COLUMN_COUNT} from './../styles/layouts';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 import {getIconSrc} from './../styles/icons';
 
-import {getPosts} from './../services/BackendLess';
+import {getPosts} from './../services/Posts';
 
 export default class extends Tab {
   constructor() {

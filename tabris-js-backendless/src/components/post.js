@@ -10,7 +10,7 @@ import {BACKGROUND, BORDER, WHITE} from './../styles/colors';
 import {ActionSheet, Prompt, Avatar} from './../components';
 
 // Services
-import {deletePost, updatePostTitle, doIOwn} from './../services/BackendLess';
+import {deletePost, updatePostTitle, doIOwn} from './../services/Posts';
 import {sharePost , sharePostViaFacebook , sharePostViaTwitter} from './../services/Sharing';
 
 

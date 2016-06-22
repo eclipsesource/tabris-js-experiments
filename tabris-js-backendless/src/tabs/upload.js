@@ -1,9 +1,11 @@
-import {Page, TabFolder, Composite, Tab, ui,TextView, ImageView} from 'tabris';
-import {saveFile} from './../services/BackendLess';
+import {Composite, Tab} from 'tabris';
+
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 import {FULL} from './../styles/layouts';
+
+import {Button} from './../components';
+
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
-import Button from './../components/button';
 import {getIconSrc} from './../styles/icons';
 
 export default class extends Tab {

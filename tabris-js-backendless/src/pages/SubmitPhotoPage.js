@@ -1,6 +1,6 @@
 import {Page, TextInput, ImageView , ActivityIndicator, Composite} from 'tabris';
 import {FULL, CENTER, HIDE, SHOW , MARGIN, PADDED , PHOTO_SUBMIT_TEXT_HEIGHT} from './../styles/layouts';
-import {savePostWithImage} from './../services/BackendLess';
+import {savePostWithImage} from './../services/Posts';
 import {backToFeed} from './../services/Navigation';
 import {BACKGROUND, WHITE, NAVIGATION} from './../styles/colors';
 
