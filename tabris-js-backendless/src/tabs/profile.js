@@ -6,7 +6,7 @@ import {Button, Avatar} from './../components';
 import SubmitPhotoPage from './../pages/SubmitPhotoPage';
 
 // Services
-import {registerUser, login, logout, updateUserProfile, getActiveUser} from './../services/Auth';
+import {registerNewUser, login, logout, updateUserProfile, getActiveUser} from './../services/Auth';
 
 // Styling
 import {getIconSrc} from './../styles/icons';
@@ -130,7 +130,7 @@ export default class extends Tab {
   signUp(){
 	let {email, password} = this.get('_e');
 	this.isLoading();
-	registerUser(email.get('text'),password.get('text'))
+	registerNewUser(email.get('text'),password.get('text'))
 	  .then(response => {
 		console.log("SUCCESS REGISTERING USER");
 		this.signIn();

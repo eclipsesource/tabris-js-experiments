@@ -25,7 +25,7 @@ export function getActiveUser(){
   });
 }
 
-export function registerUser(email,password){
+export function registerNewUser(email,password){
   let user = new Backendless.User();
   user.email = email;
   user.password = password;
