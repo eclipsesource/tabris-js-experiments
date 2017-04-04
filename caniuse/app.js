@@ -1,37 +1,30 @@
-var page = tabris.create("Page", {
-  title: "JavaScript Enviroment Tests",
-  topLevel: true
-});
-tabris.create("Button", {
+new tabris.Button({
   text: "Run Tests natively",
   layoutData: {
     centerX: 0,
     top: 100
   }
-}).on("select", function(widget) {
-  page.set("enabled", false);
+}).on("select", function(event) {
+  event.target.enabled = false
   require("./src/tests").runTests(showResults);
-}).appendTo(page);
-tabris.create("Button", {
+}).appendTo(tabris.ui.contentView);
+new tabris.Button({
   text: "Run Tests on babel",
   layoutData: {
     centerX: 0,
     top: "prev() 10"
   }
-}).on("select", function(widget) {
-  page.set("enabled", false);
+}).on("select", function(event) {
+  event.target.enabled = false
   require("./lib/tests").runTests(showResults);
-}).appendTo(page);
-
-page.open();
+}).appendTo(tabris.ui.contentView);
 
 function showResults(results) {
   console.log(JSON.stringify(results));
-  var page = tabris.create("Page").open();
-  var webview = tabris.create("WebView", {
+  var webview = new tabris.WebView({
     left: 0, right: 0, top: 0, bottom: 0,
     html: createHtml(results)
-  }).appendTo(page);
+  }).appendTo(tabris.ui.contentView);
 }
 
 function createHtml(results) {
