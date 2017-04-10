@@ -2,6 +2,24 @@
 /*globals global, Symbol, Promise*/
 
 var syntaxTests = {
+  "async/await": function(name, callback) {
+    var promise = new Promise(function(resolve) {
+      resolve("OK");
+    });
+    var awaiter = new Function("return async function(p) {return await p;}")();
+    awaiter(promise).then(function(result) {
+      callback(name, result === "OK");
+    });
+  },
+  "async/await (strict mode)": function(name, callback) {
+    var promise = new Promise(function(resolve) {
+      resolve("OK");
+    });
+    var awaiter = new Function("'use strict'; return async function(p) {return await p;}")();
+    awaiter(promise).then(function(result) {
+      callback(name, result === "OK");
+    });
+  },
   "Promises": function(name, callback) {
     var promise = new Promise(function(resolve) {
       resolve("OK");
