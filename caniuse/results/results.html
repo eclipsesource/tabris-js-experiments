@@ -9,7 +9,7 @@
     </style>
     <script type="text/javascript">
 
-      var platforms = ["Android", "iOS", "windows", "node"];
+      var platforms = ["Android", "iOS8", "iOS9", "windows"];
 
       window.onload = function() {
         document.getElementById("filterCheckbox").addEventListener("change", handleFilter);
@@ -127,11 +127,14 @@
   </head>
   <body>
     <ul>
-      <li>Android: Tabris.js 1.6</li>
+      <li>Android: Tabris.js 2.0-beta2</li>
       <li>iOS Version 8.3</li>
-      <li>Windows Version 10.0.10586 (x64   Pro)</li>
-      <li>Node: V5.2.0 (for comparison)</li>
+      <li>iOS Version 9.3</li>
+      <li>Windows Version 10.0.14393 (x64 Pro)</li>
     </ul>
+    <p>
+      Note: Typed Arrays prototype members may not all be detected. E.g. windows <i>does</i> have Uint8Array.prototype.length.
+    </p>
     <p>
       <input type="checkbox" id="filterCheckbox">Hide all-green rows</input>
     </p>

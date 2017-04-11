@@ -1,4 +1,4 @@
-var platforms = ["Android", "iOS", "windows"];
+var platforms = ["Android", "iOS9", "windows"];
 
 Promise.all(platforms.map(platform => getData(platform))).then(rawData => {
   var tableData = createTableData(rawData);
