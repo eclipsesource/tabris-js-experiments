@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="example.sl.performance" version="0.1.0">
+  <name>Sl Performance</name>
+  <description>
+    Example Tabris.js App
+  </description>
+  <author email="tbuschto@eclipsesource.com">
+    Tim Buschtoens
+  </author>
+  <preference name="EnableDeveloperConsole" value="$IS_DEBUG" />
+</widget>

@@ -1,0 +1,24 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "ordered-imports": [false],
+    "object-literal-sort-keys": false,
+    "quotemark": [false],
+    "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+    "await-promise": true,
+    "indent": false,
+    "max-line-length": [false],
+    "forin": false,
+    "interface-name": [false],
+    "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
+    "prefer-const": false,
+    "no-invalid-this": true,
+    "no-unbound-method": true,
+    "typedef": [
+      true,
+      "member-variable-declaration",
+      "parameter",
+      "property-declaration"
+    ]
+  }
+}
